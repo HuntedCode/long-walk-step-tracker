@@ -1,31 +1,66 @@
-import { StyleSheet } from 'react-native';
+import { ScrollView, SafeAreaView, View, Text, Platform } from 'react-native';
+import { usePedometer } from '@/src/hooks/usePedometer';
+import { useStepStore } from '@/src/stores/useStepStore';
+import { StepCounter } from '@/src/components/steps/StepCounter';
+import { StepSimulator } from '@/src/components/steps/StepSimulator';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+export default function DashboardScreen() {
+  const {
+    isAvailable,
+    permissionStatus,
+    isTracking,
+    error,
+    backfillDebug,
+    requestPermission,
+  } = usePedometer();
+  const todaySteps = useStepStore((s) => s.todaySteps);
+  const lifetimeSteps = useStepStore((s) => s.lifetimeSteps);
+  const todayDate = useStepStore((s) => s.todayDate);
+  const lastUpdated = useStepStore((s) => s.lastUpdated);
 
-export default function TabOneScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    <SafeAreaView className="flex-1 bg-base-100">
+      <ScrollView contentContainerClassName="flex-grow" className="flex-1">
+        <StepCounter
+          todaySteps={todaySteps}
+          lifetimeSteps={lifetimeSteps}
+          isTracking={isTracking}
+          error={error}
+          onRequestPermission={requestPermission}
+        />
+        <StepSimulator />
+
+        <View className="mx-4 mt-4 mb-6 bg-base-300 rounded-xl p-4">
+          <Text className="text-sm font-semibold text-warning text-center mb-3">
+            Debug Info
+          </Text>
+
+          <DebugRow label="Platform" value={Platform.OS} />
+          <DebugRow label="Pedometer available" value={String(isAvailable)} />
+          <DebugRow label="Permission" value={permissionStatus} />
+          <DebugRow label="Tracking" value={String(isTracking)} />
+          <DebugRow label="Today date" value={todayDate} />
+          <DebugRow label="Last updated" value={lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : 'never'} />
+
+          <Text className="text-xs font-semibold text-neutral-content mt-3 mb-1">
+            Backfill
+          </Text>
+          <DebugRow label="Last attempt" value={backfillDebug.lastAttempt ?? 'none'} />
+          <DebugRow label="Steps returned" value={String(backfillDebug.stepsReturned ?? '—')} />
+          {backfillDebug.error ? (
+            <DebugRow label="Error" value={backfillDebug.error} />
+          ) : null}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});
+function DebugRow({ label, value }: { label: string; value: string }) {
+  return (
+    <View className="flex-row justify-between py-0.5">
+      <Text className="text-xs text-neutral-content">{label}</Text>
+      <Text className="text-xs text-base-content font-mono">{value}</Text>
+    </View>
+  );
+}

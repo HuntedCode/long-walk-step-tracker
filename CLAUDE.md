@@ -79,7 +79,7 @@ New jobs can be added by editing data files — no engine changes required.
 ## Project Structure
 
 ```
-LongWalkToSomewhere/
+LongWalk/
 ├── app/                          # Expo Router — file-based routing
 │   ├── _layout.tsx               # Root layout (providers, global setup)
 │   ├── index.tsx                 # Entry redirect or splash
@@ -328,6 +328,22 @@ Before any feature branch is considered complete, verify:
 - First step of any feature: search existing code for reusable pieces
 - Audit issues get fixed in the same branch if directly related, or in a separate
   `fix/` or `refactor/` branch
+
+### Inline Audit Requirement
+
+**Before completing any feature or set of changes**, run a comprehensive audit of all
+new and modified files against the Code Audit Checklist above. This is mandatory — do
+not skip it, even for "simple" changes.
+
+The audit must:
+1. Read every new/modified file
+2. Check each item on the checklist (bugs, inefficiencies, bad practices, DRY, reuse,
+   scope creep, dead code)
+3. Report findings by severity (critical, warning, minor)
+4. Fix all critical and warning issues before the work is considered complete
+5. Document any minor issues that are intentionally deferred (with rationale)
+
+This catches issues while context is fresh and prevents technical debt from accumulating.
 
 ---
 
