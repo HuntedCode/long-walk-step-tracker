@@ -19,6 +19,17 @@ export interface JobDefinition {
   maxLevel: number;
 }
 
+/** Item category for grouping in inventory. */
+export type ItemCategory = 'log' | 'fish' | 'ore';
+
+/** Static definition of an item. Lives in src/data/items.ts. */
+export interface ItemDefinition {
+  id: ItemId;
+  name: string;
+  description: string;
+  category: ItemCategory;
+}
+
 /** An item reward granted on activity completion. */
 export interface ItemReward {
   itemId: ItemId;
