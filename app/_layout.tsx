@@ -7,6 +7,7 @@ import 'react-native-reanimated';
 import '../global.css';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { useGameTick } from '@/src/hooks/useGameTick';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -45,6 +46,7 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  useGameTick();
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
