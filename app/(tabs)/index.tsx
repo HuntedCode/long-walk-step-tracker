@@ -3,6 +3,11 @@ import { usePedometer } from '@/src/hooks/usePedometer';
 import { useStepStore } from '@/src/stores/useStepStore';
 import { StepCounter } from '@/src/components/steps/StepCounter';
 import { StepSimulator } from '@/src/components/steps/StepSimulator';
+import { StepBankDisplay } from '@/src/components/game/StepBankDisplay';
+import { ZoneCard } from '@/src/components/game/ZoneCard';
+import { ActivityCard } from '@/src/components/game/ActivityCard';
+import { ZonePicker } from '@/src/components/game/ZonePicker';
+import { ActivityPicker } from '@/src/components/game/ActivityPicker';
 
 export default function DashboardScreen() {
   const {
@@ -20,7 +25,7 @@ export default function DashboardScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-base-100">
-      <ScrollView contentContainerClassName="flex-grow" className="flex-1">
+      <ScrollView contentContainerClassName="pb-6" className="flex-1">
         <StepCounter
           todaySteps={todaySteps}
           lifetimeSteps={lifetimeSteps}
@@ -28,29 +33,40 @@ export default function DashboardScreen() {
           error={error}
           onRequestPermission={requestPermission}
         />
-        <StepSimulator />
 
-        <View className="mx-4 mt-4 mb-6 bg-base-300 rounded-xl p-4">
-          <Text className="text-sm font-semibold text-warning text-center mb-3">
-            Debug Info
-          </Text>
+        <StepBankDisplay />
+        <ZoneCard />
+        <ActivityCard />
+        <ZonePicker />
+        <ActivityPicker />
 
-          <DebugRow label="Platform" value={Platform.OS} />
-          <DebugRow label="Pedometer available" value={String(isAvailable)} />
-          <DebugRow label="Permission" value={permissionStatus} />
-          <DebugRow label="Tracking" value={String(isTracking)} />
-          <DebugRow label="Today date" value={todayDate} />
-          <DebugRow label="Last updated" value={lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : 'never'} />
+        {__DEV__ ? (
+          <>
+            <StepSimulator />
 
-          <Text className="text-xs font-semibold text-neutral-content mt-3 mb-1">
-            Backfill
-          </Text>
-          <DebugRow label="Last attempt" value={backfillDebug.lastAttempt ?? 'none'} />
-          <DebugRow label="Steps returned" value={String(backfillDebug.stepsReturned ?? '—')} />
-          {backfillDebug.error ? (
-            <DebugRow label="Error" value={backfillDebug.error} />
-          ) : null}
-        </View>
+            <View className="mx-4 mt-4 mb-6 bg-base-300 rounded-xl p-4">
+              <Text className="text-sm font-semibold text-warning text-center mb-3">
+                Debug Info
+              </Text>
+
+              <DebugRow label="Platform" value={Platform.OS} />
+              <DebugRow label="Pedometer available" value={String(isAvailable)} />
+              <DebugRow label="Permission" value={permissionStatus} />
+              <DebugRow label="Tracking" value={String(isTracking)} />
+              <DebugRow label="Today date" value={todayDate} />
+              <DebugRow label="Last updated" value={lastUpdated ? new Date(lastUpdated).toLocaleTimeString() : 'never'} />
+
+              <Text className="text-xs font-semibold text-neutral-content mt-3 mb-1">
+                Backfill
+              </Text>
+              <DebugRow label="Last attempt" value={backfillDebug.lastAttempt ?? 'none'} />
+              <DebugRow label="Steps returned" value={String(backfillDebug.stepsReturned ?? '—')} />
+              {backfillDebug.error ? (
+                <DebugRow label="Error" value={backfillDebug.error} />
+              ) : null}
+            </View>
+          </>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
