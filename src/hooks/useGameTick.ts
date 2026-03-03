@@ -6,6 +6,7 @@ import { useStepStore } from '@/src/stores/useStepStore';
 import { usePlayerStore } from '@/src/stores/usePlayerStore';
 import { useJobStore } from '@/src/stores/useJobStore';
 import { useInventoryStore } from '@/src/stores/useInventoryStore';
+import { useEventStore } from '@/src/stores/useEventStore';
 import type { GameTickInput } from '@/src/types/game';
 
 /**
@@ -78,6 +79,9 @@ export function useGameTick(): void {
       }
       if (result.itemRewards.length > 0) {
         useInventoryStore.getState().addItems(result.itemRewards);
+      }
+      if (result.events.length > 0) {
+        useEventStore.getState().pushEvents(result.events);
       }
     });
 

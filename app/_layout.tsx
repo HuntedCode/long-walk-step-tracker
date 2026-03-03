@@ -8,6 +8,7 @@ import '../global.css';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { useGameTick } from '@/src/hooks/useGameTick';
+import { GameEventToast } from '@/src/components/game/GameEventToast';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -50,6 +51,7 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <GameEventToast />
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
