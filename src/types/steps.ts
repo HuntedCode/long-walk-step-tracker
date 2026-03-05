@@ -8,6 +8,8 @@ export interface DailyStepRecord {
   date: string;
   steps: number;
   lastUpdated: string;
+  /** The daily step goal that was active on this day. Optional for pre-migration data. */
+  goalAtTime?: number;
 }
 
 export interface StepStoreState {
@@ -21,6 +23,12 @@ export interface StepStoreState {
   lifetimeSteps: number;
   /** ISO timestamp of last step store update */
   lastUpdated: string;
+  /** User-configurable daily step goal (default 1,000, min 1,000, max 100,000). */
+  dailyStepGoal: number;
+  /** Goal queued for tomorrow. Null means no pending change. */
+  pendingDailyStepGoal: number | null;
+  /** Sorted array of dates where the app was opened AND the goal was met. */
+  goalMetDates: string[];
 }
 
 export interface StepStoreActions {
@@ -30,4 +38,12 @@ export interface StepStoreActions {
   backfillToday: (totalStepsToday: number) => void;
   /** Force a day rollover check (called on app foreground). */
   checkDayRollover: () => void;
+  /** Queue a new daily step goal for tomorrow (clamped to 1,000–100,000). */
+  setDailyStepGoal: (goal: number) => void;
+  /** Cancel the pending goal change. */
+  clearPendingGoal: () => void;
+  /** Debug only: remove steps from today (clamped to 0). Reverts goalMet if applicable. */
+  removeSteps: (stepDelta: number) => void;
+  /** Debug only: set goalMetDates to simulate a streak of N consecutive days ending yesterday. */
+  debugSetStreak: (days: number) => void;
 }
