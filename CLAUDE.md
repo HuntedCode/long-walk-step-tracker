@@ -308,6 +308,8 @@ Before any feature branch is considered complete, verify:
    for overlapping functions. One function, one purpose, one location
 8. **Dead Code**: No unused imports, variables, functions, or files. No
    commented-out code in commits
+9. **Documentation Current**: If any system documented in `docs/` was modified,
+   update the relevant doc in the same branch
 
 ### Lean Development Principles
 
@@ -344,6 +346,28 @@ The audit must:
 5. Document any minor issues that are intentionally deferred (with rationale)
 
 This catches issues while context is fresh and prevents technical debt from accumulating.
+
+### Documentation Maintenance
+
+The `docs/` folder contains system documentation that must stay current.
+**When a system's behavior changes, its documentation must be updated in the
+same branch.** Stale docs are worse than no docs.
+
+| Document | Scope |
+|----------|-------|
+| `docs/world-bible.md` | Narrative design, world-building, themes, biome structure |
+| `docs/step-pipeline.md` | Step flow from sensor to game state (pedometer, game tick, bank) |
+| `docs/game-systems.md` | Jobs, activities, zones, travel, inventory, events — how they interconnect |
+| `docs/store-architecture.md` | Zustand stores, persistence, cross-store patterns |
+| `docs/step-stats-and-goals.md` | Streaks, daily goals, step statistics |
+
+**Rules:**
+- If you modify a system's behavior, update the relevant doc in the same branch
+- When creating a new system, evaluate whether it needs documentation (bar: is
+  the behavior non-obvious from reading the code?)
+- Docs focus on *why things work this way* and *how systems connect* — not
+  implementation details obvious from reading the source
+- Keep docs scannable: tables, diagrams, and short sections over prose walls
 
 ---
 
