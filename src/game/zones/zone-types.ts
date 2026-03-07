@@ -18,6 +18,12 @@ export interface ZoneDefinition {
   id: ZoneId;
   name: string;
   description: string;
+  /** Short biome label (e.g. "FOREST", "COASTAL"). */
+  biome: string;
+  /** Accent color for UI theming (hex string). */
+  color: string;
+  /** Ionicon name for the zone icon. */
+  icon: string;
   /** Connections to other zones the player can travel to. */
   connections: ZoneConnection[];
   /** Requirement to unlock this zone. Null = always available. */

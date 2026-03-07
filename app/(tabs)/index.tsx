@@ -1,4 +1,4 @@
-import { ScrollView, SafeAreaView, View, Text, Platform } from 'react-native';
+import { ScrollView, SafeAreaView, View, Text, Platform, Pressable } from 'react-native';
 import { usePedometer } from '@/src/hooks/usePedometer';
 import { useStepStore } from '@/src/stores/useStepStore';
 import { StepCounter } from '@/src/components/steps/StepCounter';

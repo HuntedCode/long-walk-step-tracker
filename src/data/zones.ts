@@ -15,6 +15,9 @@ export const zoneDefinitions: ZoneDefinition[] = [
     id: ZONE_IDS.HOMESTEAD,
     name: 'Homestead',
     description: 'A quiet settlement at the crossroads. Your journey begins here.',
+    biome: 'CROSSROADS',
+    color: '#B8860B',
+    icon: 'home-outline',
     unlockRequirement: null,
     connections: [
       { targetZoneId: ZONE_IDS.WHISPERING_WOODS, stepsRequired: 500 },
@@ -26,6 +29,9 @@ export const zoneDefinitions: ZoneDefinition[] = [
     id: ZONE_IDS.WHISPERING_WOODS,
     name: 'Whispering Woods',
     description: 'A dense forest filled with trees ripe for the axe.',
+    biome: 'FOREST',
+    color: '#4A7C59',
+    icon: 'leaf-outline',
     unlockRequirement: null,
     connections: [
       { targetZoneId: ZONE_IDS.HOMESTEAD, stepsRequired: 500 },
@@ -36,6 +42,9 @@ export const zoneDefinitions: ZoneDefinition[] = [
     id: ZONE_IDS.SILVER_BROOK,
     name: 'Silver Brook',
     description: 'A sparkling brook teeming with fish.',
+    biome: 'COASTAL',
+    color: '#4A90A4',
+    icon: 'water-outline',
     unlockRequirement: null,
     connections: [
       { targetZoneId: ZONE_IDS.HOMESTEAD, stepsRequired: 800 },
@@ -47,6 +56,9 @@ export const zoneDefinitions: ZoneDefinition[] = [
     id: ZONE_IDS.IRONPEAK_RIDGE,
     name: 'Ironpeak Ridge',
     description: 'A craggy mountain ridge rich with mineral veins.',
+    biome: 'HIGHLAND',
+    color: '#8B7355',
+    icon: 'triangle-outline',
     unlockRequirement: { totalLevel: 5 },
     connections: [
       { targetZoneId: ZONE_IDS.HOMESTEAD, stepsRequired: 1200 },
