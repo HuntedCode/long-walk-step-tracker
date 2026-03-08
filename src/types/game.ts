@@ -1,11 +1,13 @@
 import type {
   ActivityId,
   ActivityProgressState,
+  ItemId,
   ItemReward,
   JobState,
   XpReward,
   ZoneId,
 } from '../game/jobs/job-types';
+import type { ItemRarity } from '../game/loot/loot-types';
 import type { TravelState } from '../game/zones/zone-types';
 
 /** The player's current mode of action. */
@@ -35,7 +37,8 @@ export type GameEvent =
   | { type: 'ARRIVED_AT_ZONE'; zoneId: ZoneId }
   | { type: 'LEVEL_UP'; jobId: string; oldLevel: number; newLevel: number }
   | { type: 'BANK_DEPOSIT'; amount: number }
-  | { type: 'BANK_WITHDRAWAL'; amount: number };
+  | { type: 'BANK_WITHDRAWAL'; amount: number }
+  | { type: 'RARE_DROP'; itemId: ItemId; quantity: number; rarity: ItemRarity };
 
 /** Output of processing a game tick. Applied to stores by the hook. */
 export interface GameTickResult {

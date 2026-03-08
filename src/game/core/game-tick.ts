@@ -2,13 +2,16 @@ import type { ActivityDefinition } from '../jobs/job-types';
 import { processActivitySteps, applyXpRewards, detectLevelUps } from '../jobs/job-engine';
 import { processTravelSteps } from '../zones/zone-engine';
 import { calculateEffectiveSteps, calculateBankDeposit } from './formulas';
+import { rollLootForCompletions } from '../loot/loot-engine';
+import { itemDefinitionMap } from '../../data/items';
+import type { SeededRNG } from './rng';
 import type { GameEvent, GameTickInput, GameTickResult } from '../../types/game';
 
 /**
  * Process a game tick — the central dispatcher that routes step deltas
  * to the appropriate system (travel, activity, or bank).
  *
- * This is a pure function: same inputs always produce the same outputs.
+ * Deterministic when given the same inputs and RNG seed.
  * The calling hook is responsible for applying the result to stores.
  *
  * Flow:
@@ -16,11 +19,13 @@ import type { GameEvent, GameTickInput, GameTickResult } from '../../types/game'
  *    steps fall through to activity or bank.
  * 2. If ACTIVITY ACTIVE → steps (+ banked) go to activity progress.
  *    Completions award items and XP. Activity auto-restarts.
+ *    If the activity has a lootTable, items are rolled probabilistically.
  * 3. If IDLE → steps go to the step bank (up to cap).
  */
 export function processGameTick(
   input: GameTickInput,
   activeActivity: ActivityDefinition | null,
+  rng?: SeededRNG,
 ): GameTickResult {
   const events: GameEvent[] = [];
   let remainingSteps = input.stepDelta;
@@ -67,7 +72,34 @@ export function processGameTick(
     activityProgress = activityResult.progress;
 
     if (activityResult.completions > 0) {
-      itemRewards.push(...activityResult.itemRewards);
+      // Determine item rewards: use loot table if available, else fallback
+      if (activeActivity.lootTable && rng) {
+        const jobLevel = input.jobStates[activeActivity.jobId]?.level ?? 1;
+        const lootRewards = rollLootForCompletions(
+          activeActivity.lootTable,
+          activityResult.completions,
+          jobLevel,
+          rng,
+        );
+        itemRewards.push(...lootRewards);
+
+        // Emit RARE_DROP events for non-common items
+        for (const reward of lootRewards) {
+          const itemDef = itemDefinitionMap[reward.itemId];
+          if (itemDef && itemDef.rarity !== 'common') {
+            events.push({
+              type: 'RARE_DROP',
+              itemId: reward.itemId,
+              quantity: reward.quantity,
+              rarity: itemDef.rarity,
+            });
+          }
+        }
+      } else {
+        // Legacy fallback: deterministic item rewards
+        itemRewards.push(...activityResult.itemRewards);
+      }
+
       xpRewards.push(...activityResult.xpRewards);
 
       events.push({

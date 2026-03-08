@@ -1,4 +1,5 @@
 import type { ActivityDefinition } from '../game/jobs/job-types';
+import type { LootTable } from '../game/loot/loot-types';
 import { JOB_IDS } from './jobs';
 import { ITEM_IDS } from './items';
 import { ZONE_IDS } from './zones';
@@ -15,6 +16,14 @@ export const activityDefinitions: ActivityDefinition[] = [
     itemRewards: [{ itemId: ITEM_IDS.NORMAL_LOG, quantity: 1 }],
     xpRewards: [{ jobId: JOB_IDS.WOODCUTTING, amount: 25 }],
     requirements: [],
+    lootTable: {
+      guaranteed: [
+        { itemId: ITEM_IDS.NORMAL_LOG, quantity: [1, 1], weight: 0, rarity: 'common' },
+      ],
+      rolls: [],
+      rollCount: 1,
+      nothingWeight: 0,
+    },
   },
   {
     id: 'chop_oak_tree',
@@ -26,6 +35,16 @@ export const activityDefinitions: ActivityDefinition[] = [
     itemRewards: [{ itemId: ITEM_IDS.OAK_LOG, quantity: 1 }],
     xpRewards: [{ jobId: JOB_IDS.WOODCUTTING, amount: 50 }],
     requirements: [{ jobId: JOB_IDS.WOODCUTTING, level: 15 }],
+    lootTable: {
+      guaranteed: [
+        { itemId: ITEM_IDS.OAK_LOG, quantity: [1, 1], weight: 0, rarity: 'common' },
+      ],
+      rolls: [
+        { itemId: ITEM_IDS.ASHEN_HEARTWOOD, quantity: [1, 1], weight: 5, rarity: 'uncommon' },
+      ],
+      rollCount: 1,
+      nothingWeight: 95,
+    },
   },
   {
     id: 'chop_willow_tree',
@@ -37,6 +56,17 @@ export const activityDefinitions: ActivityDefinition[] = [
     itemRewards: [{ itemId: ITEM_IDS.WILLOW_LOG, quantity: 1 }],
     xpRewards: [{ jobId: JOB_IDS.WOODCUTTING, amount: 85 }],
     requirements: [{ jobId: JOB_IDS.WOODCUTTING, level: 30 }],
+    lootTable: {
+      guaranteed: [
+        { itemId: ITEM_IDS.WILLOW_LOG, quantity: [1, 1], weight: 0, rarity: 'common' },
+      ],
+      rolls: [
+        { itemId: ITEM_IDS.ASHEN_HEARTWOOD, quantity: [1, 1], weight: 8, rarity: 'uncommon' },
+        { itemId: ITEM_IDS.FRACTURED_RUNESTONE, quantity: [1, 1], weight: 2, rarity: 'rare' },
+      ],
+      rollCount: 1,
+      nothingWeight: 90,
+    },
   },
 
   // --- Fishing (Silver Brook) ---
@@ -50,6 +80,14 @@ export const activityDefinitions: ActivityDefinition[] = [
     itemRewards: [{ itemId: ITEM_IDS.RAW_SHRIMP, quantity: 1 }],
     xpRewards: [{ jobId: JOB_IDS.FISHING, amount: 20 }],
     requirements: [],
+    lootTable: {
+      guaranteed: [
+        { itemId: ITEM_IDS.RAW_SHRIMP, quantity: [1, 1], weight: 0, rarity: 'common' },
+      ],
+      rolls: [],
+      rollCount: 1,
+      nothingWeight: 0,
+    },
   },
   {
     id: 'catch_trout',
@@ -61,6 +99,17 @@ export const activityDefinitions: ActivityDefinition[] = [
     itemRewards: [{ itemId: ITEM_IDS.RAW_TROUT, quantity: 1 }],
     xpRewards: [{ jobId: JOB_IDS.FISHING, amount: 45 }],
     requirements: [{ jobId: JOB_IDS.FISHING, level: 20 }],
+    lootTable: {
+      guaranteed: [
+        { itemId: ITEM_IDS.RAW_TROUT, quantity: [1, 1], weight: 0, rarity: 'common' },
+      ],
+      rolls: [
+        { itemId: ITEM_IDS.DUST_PEARL, quantity: [1, 1], weight: 6, rarity: 'uncommon' },
+        { itemId: ITEM_IDS.FRACTURED_RUNESTONE, quantity: [1, 1], weight: 2, rarity: 'rare' },
+      ],
+      rollCount: 1,
+      nothingWeight: 92,
+    },
   },
 
   // --- Mining (Ironpeak Ridge) ---
@@ -74,6 +123,14 @@ export const activityDefinitions: ActivityDefinition[] = [
     itemRewards: [{ itemId: ITEM_IDS.COPPER_ORE, quantity: 1 }],
     xpRewards: [{ jobId: JOB_IDS.MINING, amount: 30 }],
     requirements: [],
+    lootTable: {
+      guaranteed: [
+        { itemId: ITEM_IDS.COPPER_ORE, quantity: [1, 1], weight: 0, rarity: 'common' },
+      ],
+      rolls: [],
+      rollCount: 1,
+      nothingWeight: 0,
+    },
   },
   {
     id: 'mine_iron',
@@ -85,6 +142,16 @@ export const activityDefinitions: ActivityDefinition[] = [
     itemRewards: [{ itemId: ITEM_IDS.IRON_ORE, quantity: 1 }],
     xpRewards: [{ jobId: JOB_IDS.MINING, amount: 60 }],
     requirements: [{ jobId: JOB_IDS.MINING, level: 15 }],
+    lootTable: {
+      guaranteed: [
+        { itemId: ITEM_IDS.IRON_ORE, quantity: [1, 1], weight: 0, rarity: 'common' },
+      ],
+      rolls: [
+        { itemId: ITEM_IDS.SCORCHED_RELIC, quantity: [1, 1], weight: 4, rarity: 'rare' },
+      ],
+      rollCount: 1,
+      nothingWeight: 96,
+    },
   },
   {
     id: 'mine_silver',
@@ -96,6 +163,17 @@ export const activityDefinitions: ActivityDefinition[] = [
     itemRewards: [{ itemId: ITEM_IDS.SILVER_ORE, quantity: 1 }],
     xpRewards: [{ jobId: JOB_IDS.MINING, amount: 95 }],
     requirements: [{ jobId: JOB_IDS.MINING, level: 30 }],
+    lootTable: {
+      guaranteed: [
+        { itemId: ITEM_IDS.SILVER_ORE, quantity: [1, 1], weight: 0, rarity: 'common' },
+      ],
+      rolls: [
+        { itemId: ITEM_IDS.SCORCHED_RELIC, quantity: [1, 1], weight: 7, rarity: 'rare' },
+        { itemId: ITEM_IDS.FRACTURED_RUNESTONE, quantity: [1, 1], weight: 3, rarity: 'rare' },
+      ],
+      rollCount: 1,
+      nothingWeight: 90,
+    },
   },
 ];
 

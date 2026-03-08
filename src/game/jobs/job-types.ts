@@ -20,7 +20,10 @@ export interface JobDefinition {
 }
 
 /** Item category for grouping in inventory. */
-export type ItemCategory = 'log' | 'fish' | 'ore';
+export type ItemCategory = 'log' | 'fish' | 'ore' | 'gem' | 'herb' | 'food' | 'equipment' | 'misc';
+
+/** Re-export ItemRarity so consumers don't need to import from loot-types directly. */
+export type { ItemRarity } from '../loot/loot-types';
 
 /** Static definition of an item. Lives in src/data/items.ts. */
 export interface ItemDefinition {
@@ -28,6 +31,12 @@ export interface ItemDefinition {
   name: string;
   description: string;
   category: ItemCategory;
+  /** Rarity tier. Affects drop rate scaling and UI styling. */
+  rarity: import('../loot/loot-types').ItemRarity;
+  /** Base value (for future selling/trading). 0 = unsellable. */
+  value: number;
+  /** Whether this item stacks in inventory. Materials stack; equipment won't. */
+  stackable: boolean;
 }
 
 /** An item reward granted on activity completion. */
@@ -59,12 +68,14 @@ export interface ActivityDefinition {
   zoneId: ZoneId;
   /** Steps required to complete one action. */
   stepsRequired: number;
-  /** Items awarded on completion. */
+  /** Items awarded on completion (legacy — used as fallback when lootTable is absent). */
   itemRewards: ItemReward[];
   /** XP awarded on completion. */
   xpRewards: XpReward[];
   /** Level requirement to unlock. Empty array = always available. */
   requirements: LevelRequirement[];
+  /** Probabilistic loot table. When present, overrides itemRewards for item drops. */
+  lootTable?: import('../loot/loot-types').LootTable;
 }
 
 /** Runtime state of a job for a single player. */

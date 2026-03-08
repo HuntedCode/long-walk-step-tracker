@@ -4,9 +4,19 @@ import { useEventStore } from '@/src/stores/useEventStore';
 import { jobDefinitionMap } from '@/src/data/jobs';
 import { activityDefinitionMap } from '@/src/data/activities';
 import { zoneDefinitionMap } from '@/src/data/zones';
+import { itemDefinitionMap } from '@/src/data/items';
 import type { GameEvent } from '@/src/types/game';
+import type { ItemRarity } from '@/src/game/loot/loot-types';
 
 const TOAST_DURATION_MS = 3000;
+
+const RARITY_COLORS: Record<ItemRarity, string> = {
+  common: 'bg-base-300',
+  uncommon: 'bg-success',
+  rare: 'bg-info',
+  epic: 'bg-secondary',
+  legendary: 'bg-warning',
+};
 
 function getEventDisplay(event: GameEvent): { text: string; color: string } {
   switch (event.type) {
@@ -33,6 +43,15 @@ function getEventDisplay(event: GameEvent): { text: string; color: string } {
       return {
         text: `Arrived at ${name}`,
         color: 'bg-accent',
+      };
+    }
+    case 'RARE_DROP': {
+      const item = itemDefinitionMap[event.itemId];
+      const name = item?.name ?? event.itemId;
+      const suffix = event.quantity > 1 ? ` x${event.quantity}` : '';
+      return {
+        text: `Rare find: ${name}${suffix}`,
+        color: RARITY_COLORS[event.rarity] ?? 'bg-info',
       };
     }
     default:

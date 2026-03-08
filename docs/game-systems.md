@@ -25,10 +25,11 @@
 │                 │          │                           │
 │ Steps → travel  │          │  Steps → completions     │
 │ progress until  │          │    → XP rewards           │
-│ arrival         │          │    → Item rewards          │
+│ arrival         │          │    → Loot table rolls      │
 └─────────────────┘          └──────┬──────────┬─────────┘
                                     │          │
-                              XP rewards   Item rewards
+                              XP rewards   Loot rewards
+                                    │      (guaranteed + rolled)
                                     │          │
                                     ▼          ▼
                           ┌──────────┐  ┌────────────┐
@@ -95,16 +96,30 @@ belongs to exactly one job and one zone.
 | `jobId` | Which job gains XP |
 | `zoneId` | Which zone this is available in |
 | `stepsRequired` | Steps per completion |
-| `itemRewards[]` | Items granted per completion |
+| `itemRewards[]` | Legacy fallback items (used when no lootTable) |
 | `xpRewards[]` | XP granted per completion |
 | `requirements[]` | Job level gates (all must be met) |
+| `lootTable?` | Probabilistic loot table (overrides itemRewards when present) |
+
+### Loot tables (`src/game/loot/`)
+Each activity can define a `LootTable` with two layers:
+- **Guaranteed drops**: always awarded (e.g., 1 Normal Log per chop)
+- **Roll table**: weighted random selection for bonus drops, with a `nothingWeight`
+  for "no bonus" outcomes
+
+The game tick rolls each completion independently using `SeededRNG`. Higher
+job levels boost rare drop weights via `applyJobLevelBonus()` — a level 50
+miner finds rare items more often than a level 5 miner.
+
+Non-common drops emit a `RARE_DROP` event for UI celebration.
 
 ### Multi-completion (`src/game/jobs/job-engine.ts:processActivitySteps`)
 Activities loop until `progress < stepsRequired`:
 ```
 1000 steps on a 150-step activity = 6 completions + 100 steps carried over
 ```
-Rewards are aggregated: `quantity × completions` for each reward entry.
+Each completion rolls the loot table independently (6 completions = 6 chances
+at rare drops). Results are aggregated by item ID.
 
 ### Inline level-up detection
 After awarding XP, the game tick runs `applyXpRewards()` → `detectLevelUps()`.
@@ -145,11 +160,20 @@ by this check.
 
 ## Inventory (`src/stores/useInventoryStore.ts`)
 
-Simple accumulation: items keyed by ID with quantities. `addItems(rewards)`
-increments quantities. No advanced mechanics yet (no equipment, no selling,
-no stacking limits).
+Items keyed by ID with quantities. Stackable items accumulate without limit.
 
-Items defined in `src/data/items.ts`: 3 log types, 2 fish types, 3 ore types.
+**Actions:**
+- `addItems(rewards)` — increment quantities from loot/activity rewards
+- `removeItems(itemId, quantity)` — consume items (returns false if insufficient)
+- `getItemCount(itemId)` / `hasItems(itemId, quantity)` — query helpers
+
+**Item definitions** (`src/data/items.ts`): Each item has `rarity`, `value`,
+`stackable`, and `category`. Current items are placeholders — names and
+descriptions will be refined as the world bible evolves.
+
+**Item categories**: log, fish, ore, gem, herb, food, equipment, misc.
+
+**Rarity tiers**: common, uncommon, rare, epic, legendary.
 
 ---
 
@@ -162,6 +186,7 @@ Ephemeral notification queue — **not persisted**.
 | `ACTIVITY_COMPLETED` | Activity completion in game tick |
 | `ARRIVED_AT_ZONE` | Travel arrival in game tick |
 | `LEVEL_UP` | Inline detection after XP award |
+| `RARE_DROP` | Non-common item rolled from loot table |
 | `BANK_DEPOSIT` | Idle steps banked |
 | `BANK_WITHDRAWAL` | Banked steps consumed during activity |
 
@@ -195,12 +220,15 @@ meets the requirements. Items auto-appear in inventory when earned.
 | `src/game/jobs/job-formulas.ts` | XP curve, level calculation, progress fraction |
 | `src/game/jobs/job-engine.ts` | Activity processing, XP application, level-up detection |
 | `src/game/jobs/job-types.ts` | All type definitions (Job, Activity, Item, rewards, requirements) |
+| `src/game/loot/loot-types.ts` | Loot table, loot entry, rarity type definitions |
+| `src/game/loot/loot-engine.ts` | Loot rolling, job level bonus, reward aggregation |
+| `src/game/core/rng.ts` | Seeded PRNG (mulberry32) for deterministic loot rolls |
 | `src/game/zones/zone-engine.ts` | Travel processing, zone unlock checking |
 | `src/game/zones/zone-types.ts` | Zone and travel type definitions |
 | `src/data/jobs.ts` | Job content definitions |
 | `src/data/zones.ts` | Zone content definitions |
-| `src/data/activities.ts` | Activity content definitions |
-| `src/data/items.ts` | Item content definitions |
+| `src/data/activities.ts` | Activity content definitions (with loot tables) |
+| `src/data/items.ts` | Item content definitions (with rarity, value, stackable) |
 | `src/stores/useJobStore.ts` | Job XP/level state, totalLevel |
-| `src/stores/useInventoryStore.ts` | Item quantities |
+| `src/stores/useInventoryStore.ts` | Item quantities, add/remove/query |
 | `src/stores/useEventStore.ts` | Ephemeral event queue |

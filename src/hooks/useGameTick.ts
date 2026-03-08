@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { processGameTick } from '@/src/game/core/game-tick';
 import { calculateBankCap } from '@/src/game/core/formulas';
+import { createRNG } from '@/src/game/core/rng';
 import { activityDefinitionMap } from '@/src/data/activities';
 import { useStepStore } from '@/src/stores/useStepStore';
 import { usePlayerStore } from '@/src/stores/usePlayerStore';
@@ -63,7 +64,9 @@ export function useGameTick(): void {
         jobStates: jobState.jobs,
       };
 
-      const result = processGameTick(input, activeActivity);
+      // Fresh RNG per tick — seeded from timestamp for natural randomness
+      const rng = createRNG();
+      const result = processGameTick(input, activeActivity, rng);
 
       // Apply results to stores
       playerState.applyTickResult({
