@@ -71,47 +71,69 @@ export function StreakCard({
       ? `rgba(255, 234, 44, ${borderOpacity.value})`
       : `rgba(98, 239, 189, ${borderOpacity.value})`,
     borderRadius: 12,
+    marginHorizontal: 16,
+    marginTop: 8,
   }));
 
   return (
-    <Animated.View style={borderGlowStyle} className="mx-4 mt-2">
-      <View className="bg-base-200 rounded-xl p-4">
-        {/* Row 1: Streak number + flame + label + best badge */}
-        <View className="flex-row items-center justify-between">
-          <View className="flex-row items-center">
-            <Text className={`text-3xl font-bold ${streakAtRisk ? 'text-warning' : 'text-success'}`}>
-              {streak}
-            </Text>
-            {streak > 0 ? (
-              <StreakFlame streak={streak} streakAtRisk={streakAtRisk} />
-            ) : (
-              <Text className="text-sm text-neutral-content ml-1">day streak</Text>
-            )}
-          </View>
-          {streak > 0 && streak === bestStreak && !streakAtRisk ? (
-            <Text className="text-xs font-semibold text-accent">Personal Best!</Text>
-          ) : (
-            <Text className="text-xs text-neutral-content">Best: {bestStreak}</Text>
-          )}
-        </View>
-
-        {/* Row 2: Milestone badges */}
-        {streak > 0 && <StreakMilestones streak={streak} />}
-
-        {/* Row 3: Goal dots */}
-        <GoalDots
-          goalMetDates={goalMetDates}
-          todayDate={todayDate}
-          goalMet={goalMet}
-          streakAtRisk={streakAtRisk}
+    <Animated.View style={borderGlowStyle}>
+      <View
+        className="rounded-xl overflow-hidden"
+        style={{
+          backgroundColor: '#0D1117',
+        }}
+      >
+        {/* Colored left accent bar */}
+        <View
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 4,
+            backgroundColor: streakAtRisk ? '#FFEA2C' : '#62EFBD',
+            opacity: streak > 0 ? 1 : 0.3,
+          }}
         />
 
-        {/* Row 4: Flavor text */}
-        <Text className="text-xs text-neutral-content mt-2 italic">
-          {streakAtRisk
-            ? `${stepsRemaining.toLocaleString()} steps to keep it alive!`
-            : getStreakFlavor(streak)}
-        </Text>
+        <View className="pl-5 pr-4 py-3">
+          {/* Row 1: Streak number + flame + label + best badge */}
+          <View className="flex-row items-center justify-between">
+            <View className="flex-row items-center">
+              <Text className={`text-3xl font-bold ${streakAtRisk ? 'text-warning' : 'text-success'}`}>
+                {streak}
+              </Text>
+              {streak > 0 ? (
+                <StreakFlame streak={streak} streakAtRisk={streakAtRisk} />
+              ) : (
+                <Text className="text-sm ml-1" style={{ color: '#8899AA' }}>day streak</Text>
+              )}
+            </View>
+            {streak > 0 && streak === bestStreak && !streakAtRisk ? (
+              <Text className="text-xs font-semibold text-accent">Personal Best!</Text>
+            ) : (
+              <Text className="text-xs" style={{ color: '#8899AA' }}>Best: {bestStreak}</Text>
+            )}
+          </View>
+
+          {/* Row 2: Milestone badges */}
+          {streak > 0 && <StreakMilestones streak={streak} />}
+
+          {/* Row 3: Goal dots */}
+          <GoalDots
+            goalMetDates={goalMetDates}
+            todayDate={todayDate}
+            goalMet={goalMet}
+            streakAtRisk={streakAtRisk}
+          />
+
+          {/* Row 4: Flavor text */}
+          <Text className="text-xs mt-2 italic" style={{ color: '#8899AA' }}>
+            {streakAtRisk
+              ? `${stepsRemaining.toLocaleString()} steps to keep it alive!`
+              : getStreakFlavor(streak)}
+          </Text>
+        </View>
       </View>
     </Animated.View>
   );

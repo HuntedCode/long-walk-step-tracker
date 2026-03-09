@@ -1,8 +1,17 @@
 import { Platform } from 'react-native';
 import { Pedometer } from 'expo-sensors';
 import type { EventSubscription } from 'expo-modules-core';
-import * as AndroidPedometer from 'expo-android-pedometer';
+import type * as AndroidPedometerType from 'expo-android-pedometer';
 import type { PedometerPermissionStatus } from '@/src/types/steps';
+
+let _androidPedometer: typeof AndroidPedometerType | null = null;
+function getAndroidPedometer(): typeof AndroidPedometerType {
+  if (!_androidPedometer) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    _androidPedometer = require('expo-android-pedometer');
+  }
+  return _androidPedometer!;
+}
 
 /**
  * Platform-abstracted pedometer service.
@@ -18,7 +27,7 @@ import type { PedometerPermissionStatus } from '@/src/types/steps';
 export async function isPedometerAvailable(): Promise<boolean> {
   if (Platform.OS === 'android') {
     try {
-      return await AndroidPedometer.isSensorAvailable();
+      return await getAndroidPedometer().isSensorAvailable();
     } catch {
       return false;
     }
@@ -42,10 +51,10 @@ export async function isPedometerAvailable(): Promise<boolean> {
 export async function requestPedometerPermission(): Promise<PedometerPermissionStatus> {
   if (Platform.OS === 'android') {
     try {
-      const activityResult = await AndroidPedometer.requestActivityPermissions();
+      const activityResult = await getAndroidPedometer().requestActivityPermissions();
       if (!activityResult.granted) return 'denied';
       // Notification permission is needed for the foreground service notification
-      await AndroidPedometer.requestNotificationPermissions();
+      await getAndroidPedometer().requestNotificationPermissions();
       return 'granted';
     } catch {
       return 'denied';
@@ -74,7 +83,7 @@ export function subscribeToPedometer(
   callback: (result: { steps: number }) => void,
 ): EventSubscription {
   if (Platform.OS === 'android') {
-    return AndroidPedometer.subscribeToChanges((event) => {
+    return getAndroidPedometer().subscribeToChanges((event) => {
       callback({ steps: event.steps });
     });
   }
@@ -89,7 +98,7 @@ export function subscribeToPedometer(
 export async function startBackgroundTracking(): Promise<boolean> {
   if (Platform.OS !== 'android') return false;
   try {
-    return await AndroidPedometer.setupBackgroundUpdates({
+    return await getAndroidPedometer().setupBackgroundUpdates({
       contentTemplate: '%d steps today',
     });
   } catch {
@@ -108,7 +117,7 @@ export async function startBackgroundTracking(): Promise<boolean> {
 export async function getTodaySteps(): Promise<number | null> {
   if (Platform.OS === 'android') {
     try {
-      return await AndroidPedometer.getStepsCountAsync();
+      return await getAndroidPedometer().getStepsCountAsync();
     } catch {
       return null;
     }

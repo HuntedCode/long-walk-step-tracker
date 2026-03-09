@@ -4,6 +4,9 @@ import { useJobStore } from '@/src/stores/useJobStore';
 import { zoneDefinitionMap } from '@/src/data/zones';
 import { getAvailableDestinations, startTravel } from '@/src/game/zones/zone-engine';
 
+const TEXT_COLOR = '#ECF9FF';
+const DESC_COLOR = '#8899AA';
+
 export function ZonePicker() {
   const currentZoneId = usePlayerStore((s) => s.currentZoneId);
   const travel = usePlayerStore((s) => s.travel);
@@ -33,24 +36,47 @@ export function ZonePicker() {
   };
 
   return (
-    <View className="mx-4 mt-3">
-      <Text className="text-xs text-neutral-content mb-2">Travel To</Text>
+    <View className="mx-4 mt-1">
+      <Text className="text-xs font-semibold text-neutral-content mb-3 tracking-widest">
+        TRAVEL TO
+      </Text>
       {destinations.map((conn) => {
         const destZone = zoneDefinitionMap[conn.targetZoneId];
         const destName = destZone?.name ?? conn.targetZoneId;
+        const destColor = destZone?.color ?? '#8899AA';
 
         return (
           <Pressable
             key={conn.targetZoneId}
-            className="bg-base-200 rounded-lg p-3 mb-2 flex-row justify-between items-center active:bg-base-300"
+            className="mb-3 rounded-xl overflow-hidden"
+            style={{
+              backgroundColor: '#0D1117',
+              borderWidth: 1,
+              borderColor: '#1E2530',
+            }}
             onPress={() => handleTravel(conn.targetZoneId)}
           >
-            <Text className="text-sm font-semibold text-base-content">
-              {destName}
-            </Text>
-            <Text className="text-xs text-neutral-content">
-              {conn.stepsRequired} steps
-            </Text>
+            {/* Colored left accent bar */}
+            <View
+              style={{
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: 4,
+                backgroundColor: destColor,
+                opacity: 0.6,
+              }}
+            />
+
+            <View className="pl-5 pr-4 py-3 flex-row justify-between items-center">
+              <Text className="text-sm font-bold" style={{ color: TEXT_COLOR }}>
+                {destName}
+              </Text>
+              <Text className="text-xs" style={{ color: DESC_COLOR }}>
+                {conn.stepsRequired} steps
+              </Text>
+            </View>
           </Pressable>
         );
       })}

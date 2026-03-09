@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ScrollView,
-  SafeAreaView,
   View,
   Text,
   Pressable,
@@ -9,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import type { ScrollView as ScrollViewType } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -56,7 +56,7 @@ export default function StepsScreen() {
   const lifetimeSteps = useStepStore((s) => s.lifetimeSteps);
   const dailyHistory = useStepStore((s) => s.dailyHistory);
   const dailyStepGoal = useStepStore((s) => s.dailyStepGoal);
-  const goalMetDates = useStepStore((s) => s.goalMetDates);
+  const goalMetDates = useStepStore((s) => s.goalMetDates) ?? [];
   const pendingDailyStepGoal = useStepStore((s) => s.pendingDailyStepGoal);
   const setDailyStepGoal = useStepStore((s) => s.setDailyStepGoal);
   const clearPendingGoal = useStepStore((s) => s.clearPendingGoal);
@@ -149,28 +149,36 @@ export default function StepsScreen() {
     height: editorOpen.value * EDITOR_HEIGHT,
     opacity: editorOpen.value,
     marginTop: editorOpen.value * 8,
-    paddingVertical: editorOpen.value * 16,
-    paddingHorizontal: editorOpen.value * 16,
+    paddingTop: editorOpen.value * 16,
+    paddingBottom: editorOpen.value * 16,
+    paddingLeft: editorOpen.value * 20,
+    paddingRight: editorOpen.value * 16,
     borderWidth: editorOpen.value,
     overflow: 'hidden' as const,
+    marginHorizontal: 16,
   }));
 
   return (
-    <SafeAreaView className="flex-1 bg-base-100">
+    <SafeAreaView className="flex-1 bg-base-100" edges={['bottom']}>
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
       <ScrollView
         ref={scrollRef}
-        contentContainerClassName="pb-6"
         className="flex-1"
+        contentContainerStyle={{ paddingTop: 16, paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         scrollEventThrottle={16}
         onScroll={(e) => {
           currentScrollY.current = e.nativeEvent.contentOffset.y;
         }}
       >
+        <Text className="text-xs font-semibold text-neutral-content mx-4 mb-4 tracking-widest">
+          STEPS
+        </Text>
+
         {/* Hero: Goal Ring + Today's Steps */}
         <View className="items-center pt-6 pb-4">
           <View style={{ width: 180, height: 180, overflow: 'visible' }}>
@@ -194,7 +202,7 @@ export default function StepsScreen() {
           <Text className="text-sm text-neutral-content mt-2">
             {stats.goalMet
               ? 'Goal reached!'
-              : `${todaySteps.toLocaleString()} / ${dailyStepGoal.toLocaleString()} steps (${Math.round(stats.goalProgress * 100)}%)`}
+              : `${(todaySteps ?? 0).toLocaleString()} / ${(dailyStepGoal ?? 0).toLocaleString()} steps (${Math.round((stats.goalProgress ?? 0) * 100)}%)`}
           </Text>
           <Text className="text-sm text-neutral-content mt-2 mx-8 text-center italic">
             {flavorText}
@@ -214,35 +222,53 @@ export default function StepsScreen() {
 
         {/* Goal Setting Row */}
         <Pressable
-          className="mx-4 mt-2 bg-base-200 rounded-xl px-4 py-3 flex-row items-center justify-between active:bg-base-300"
+          className="mx-4 mt-2 rounded-xl overflow-hidden"
+          style={{
+            backgroundColor: '#0D1117',
+            borderWidth: 1,
+            borderColor: '#1E2530',
+          }}
           onPress={toggleGoalEditor}
         >
-          <View>
-            <Text className="text-sm text-primary font-semibold">
-              Daily Goal: {dailyStepGoal.toLocaleString()} steps
-            </Text>
-            {pendingDailyStepGoal !== null && (
-              <Text className="text-xs text-warning mt-0.5">
-                Tomorrow: {pendingDailyStepGoal.toLocaleString()} steps
-              </Text>
-            )}
-          </View>
-          <Ionicons
-            name={isOpen ? 'chevron-up' : 'create-outline'}
-            size={18}
-            color="#28EBFF"
+          {/* Colored left accent bar */}
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 4,
+              backgroundColor: '#28EBFF',
+              opacity: 0.6,
+            }}
           />
+          <View className="pl-5 pr-4 py-3 flex-row items-center justify-between">
+            <View>
+              <Text className="text-sm font-semibold" style={{ color: '#ECF9FF' }}>
+                Daily Goal: {(dailyStepGoal ?? 0).toLocaleString()} steps
+              </Text>
+              {pendingDailyStepGoal !== null && (
+                <Text className="text-xs mt-0.5" style={{ color: '#B8860B' }}>
+                  Tomorrow: {pendingDailyStepGoal.toLocaleString()} steps
+                </Text>
+              )}
+            </View>
+            <Ionicons
+              name={isOpen ? 'chevron-up' : 'create-outline'}
+              size={18}
+              color="#28EBFF"
+            />
+          </View>
         </Pressable>
 
         {/* Goal Editor (animated expand/collapse) */}
         <Animated.View
-          style={[{ borderColor: 'rgba(40, 235, 255, 0.4)' }, editorAnimatedStyle]}
-          className="mx-4 bg-base-300 rounded-xl"
+          style={[{ borderColor: '#1E2530', backgroundColor: '#141920', borderRadius: 12 }, editorAnimatedStyle]}
           onLayout={(e) => {
             editorYRef.current = e.nativeEvent.layout.y;
           }}
         >
-          <Text className="text-xs text-neutral-content mb-3">
+          <Text className="text-xs mb-4" style={{ color: '#8899AA' }}>
             Goal changes take effect tomorrow
           </Text>
           <View className="flex-row flex-wrap gap-2">
@@ -251,11 +277,11 @@ export default function StepsScreen() {
               return (
                 <Pressable
                   key={preset}
-                  className={`px-4 py-2 rounded-lg ${
-                    isSelected
-                      ? 'bg-primary'
-                      : 'bg-base-200 active:bg-base-100'
-                  }`}
+                  className="px-4 py-2 rounded-lg"
+                  style={isSelected
+                    ? { backgroundColor: '#28EBFF' }
+                    : { backgroundColor: '#0D1117', borderWidth: 1, borderColor: '#1E2530' }
+                  }
                   onPress={() => {
                     setDailyStepGoal(preset);
                     setCustomGoalText('');
@@ -263,11 +289,8 @@ export default function StepsScreen() {
                   }}
                 >
                   <Text
-                    className={`text-sm font-semibold ${
-                      isSelected
-                        ? 'text-primary-content'
-                        : 'text-base-content'
-                    }`}
+                    className="text-sm font-semibold"
+                    style={{ color: isSelected ? '#0D1117' : '#ECF9FF' }}
                   >
                     {preset.toLocaleString()}
                   </Text>
@@ -275,16 +298,16 @@ export default function StepsScreen() {
               );
             })}
           </View>
-          <View className="flex-row items-center mt-3 gap-2">
+          <View className="flex-row items-center mt-4 gap-2">
             <TextInput
-              className="flex-1 bg-base-200 rounded-lg px-3 py-2 text-sm text-base-content"
+              className="flex-1 rounded-lg px-3 py-2 text-sm"
+              style={{ backgroundColor: '#0D1117', color: '#ECF9FF', borderWidth: 1, borderColor: '#1E2530' }}
               placeholder="Custom goal..."
-              placeholderTextColor="#71717A"
+              placeholderTextColor="#8899AA"
               keyboardType="number-pad"
               value={customGoalText}
               onChangeText={setCustomGoalText}
               onFocus={() => {
-                // Save current position, then scroll editor into view
                 savedScrollY.current = currentScrollY.current;
                 setTimeout(() => {
                   scrollRef.current?.scrollTo({
@@ -294,7 +317,6 @@ export default function StepsScreen() {
                 }, 300);
               }}
               onBlur={() => {
-                // Restore scroll position from before focus
                 setTimeout(() => {
                   scrollRef.current?.scrollTo({
                     y: savedScrollY.current,
@@ -310,7 +332,8 @@ export default function StepsScreen() {
               }}
             />
             <Pressable
-              className="bg-primary rounded-lg px-4 py-2 active:bg-primary/80"
+              className="rounded-lg px-4 py-2"
+              style={{ backgroundColor: '#28EBFF' }}
               onPress={() => {
                 const val = parseInt(customGoalText, 10);
                 if (!isNaN(val) && val > 0) {
@@ -320,20 +343,20 @@ export default function StepsScreen() {
                 }
               }}
             >
-              <Text className="text-sm font-semibold text-primary-content">
+              <Text className="text-sm font-semibold" style={{ color: '#0D1117' }}>
                 Set
               </Text>
             </Pressable>
           </View>
           {pendingDailyStepGoal !== null && (
             <Pressable
-              className="mt-3"
+              className="mt-4"
               onPress={() => {
                 clearPendingGoal();
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               }}
             >
-              <Text className="text-xs text-error text-center">
+              <Text className="text-xs text-center" style={{ color: '#8899AA' }}>
                 Cancel pending change
               </Text>
             </Pressable>
@@ -341,44 +364,62 @@ export default function StepsScreen() {
         </Animated.View>
 
         {/* Stats Grid: 2x2 */}
-        <View className="mx-4 mt-3 flex-row">
+        <View className="mx-4 mt-3 flex-row gap-3">
           <StatCard
             label="This Week"
-            value={stats.weekSteps.toLocaleString()}
+            value={(stats.weekSteps ?? 0).toLocaleString()}
             sub={(() => {
-              if (stats.prevWeekSteps === 0) return 'No previous week';
-              const delta = stats.weekSteps - stats.prevWeekSteps;
+              if (!stats.prevWeekSteps) return 'No previous week';
+              const delta = (stats.weekSteps ?? 0) - stats.prevWeekSteps;
               const sign = delta >= 0 ? '+' : '';
               return `${sign}${delta.toLocaleString()} vs last week`;
             })()}
           />
-          <View className="w-3" />
           <StatCard
             label="This Month"
-            value={stats.monthSteps.toLocaleString()}
-            sub={`${stats.monthAvg.toLocaleString()} avg/day`}
+            value={(stats.monthSteps ?? 0).toLocaleString()}
+            sub={`${(stats.monthAvg ?? 0).toLocaleString()} avg/day`}
           />
         </View>
-        <View className="mx-4 mt-3 flex-row">
+        <View className="mx-4 mt-3 flex-row gap-3">
           <StatCard
             label="Best Day"
             value={stats.bestDay ? stats.bestDay.steps.toLocaleString() : '—'}
             sub={stats.bestDay ? stats.bestDay.date : 'No data yet'}
-            valueColor="text-accent"
+            valueColor="#28EBFF"
           />
-          <View className="w-3" />
           <StatCard
             label="Lifetime"
-            value={lifetimeSteps.toLocaleString()}
-            sub={`${stats.totalDaysActive} days active`}
+            value={(lifetimeSteps ?? 0).toLocaleString()}
+            sub={`${stats.totalDaysActive ?? 0} days active`}
           />
         </View>
 
         {/* Step History Chart */}
-        <View className="mx-4 mt-5 bg-base-200 rounded-xl p-4">
+        <View
+          className="mx-4 mt-5 rounded-xl overflow-hidden"
+          style={{
+            backgroundColor: '#0D1117',
+            borderWidth: 1,
+            borderColor: '#1E2530',
+          }}
+        >
+          {/* Colored left accent bar */}
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 4,
+              backgroundColor: '#28EBFF',
+              opacity: 0.6,
+            }}
+          />
+          <View className="pl-5 pr-4 py-3">
           <View className="flex-row items-center justify-between mb-3">
-            <Text className="text-xs text-neutral-content">Step History</Text>
-            <View className="flex-row bg-base-300 rounded-lg overflow-hidden">
+            <Text className="text-xs font-semibold" style={{ color: '#ECF9FF' }}>Step History</Text>
+            <View className="flex-row rounded-lg overflow-hidden" style={{ backgroundColor: '#1E2530' }}>
               {TIME_SCALES.map((scale) => (
                 <Pressable
                   key={scale}
@@ -404,11 +445,32 @@ export default function StepsScreen() {
             </View>
           </View>
           <BarChart data={chartData} goalLine={chartGoalLine} />
+          </View>
         </View>
 
-        {/* Recent Days */}
-        <View className="mx-4 mt-5 bg-base-200 rounded-xl p-4">
-          <Text className="text-xs text-neutral-content mb-3">
+        {/* Recent Days — only show if there's any step data */}
+        {recentDays.some((d) => d.steps > 0) && <View
+          className="mx-4 mt-5 rounded-xl overflow-hidden"
+          style={{
+            backgroundColor: '#0D1117',
+            borderWidth: 1,
+            borderColor: '#1E2530',
+          }}
+        >
+          {/* Colored left accent bar */}
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 4,
+              backgroundColor: '#28EBFF',
+              opacity: 0.6,
+            }}
+          />
+          <View className="pl-5 pr-4 py-3">
+          <Text className="text-xs font-semibold mb-3" style={{ color: '#ECF9FF' }}>
             Last 14 Days
           </Text>
           {recentDays.map((day, index) => {
@@ -425,7 +487,7 @@ export default function StepsScreen() {
                 ? 'bg-success'
                 : 'bg-warning';
             const isExpanded = expandedDate === day.date;
-            const pct = Math.min(100, Math.round((day.steps / effectiveGoal) * 100));
+            const pct = effectiveGoal > 0 ? Math.min(100, Math.round((day.steps / effectiveGoal) * 100)) : 0;
             const isLast = index === recentDays.length - 1;
 
             return (
@@ -513,7 +575,8 @@ export default function StepsScreen() {
               </Pressable>
             );
           })}
-        </View>
+          </View>
+        </View>}
       </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -524,7 +587,7 @@ function StatCard({
   label,
   value,
   sub,
-  valueColor = 'text-base-content',
+  valueColor,
 }: {
   label: string;
   value: string;
@@ -532,10 +595,22 @@ function StatCard({
   valueColor?: string;
 }) {
   return (
-    <View className="flex-1 bg-base-200 rounded-xl p-4">
-      <Text className="text-xs text-neutral-content">{label}</Text>
-      <Text className={`text-xl font-bold mt-1 ${valueColor}`}>{value}</Text>
-      <Text className="text-xs text-neutral-content mt-1">{sub}</Text>
+    <View
+      className="flex-1 rounded-xl p-4 items-center"
+      style={{
+        backgroundColor: '#0D1117',
+        borderWidth: 1,
+        borderColor: '#1E2530',
+      }}
+    >
+      <Text className="text-xs" style={{ color: '#8899AA' }}>{label}</Text>
+      <Text
+        className="text-xl font-bold mt-1"
+        style={{ color: valueColor ?? '#ECF9FF' }}
+      >
+        {value}
+      </Text>
+      <Text className="text-xs mt-1" style={{ color: '#8899AA' }}>{sub}</Text>
     </View>
   );
 }

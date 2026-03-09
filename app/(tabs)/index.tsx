@@ -1,4 +1,5 @@
-import { ScrollView, SafeAreaView, View, Text, Platform, Pressable } from 'react-native';
+import { ScrollView, View, Text, Platform, Pressable } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePedometer } from '@/src/hooks/usePedometer';
 import { useStepStore } from '@/src/stores/useStepStore';
 import { StepCounter } from '@/src/components/steps/StepCounter';
@@ -24,8 +25,16 @@ export default function DashboardScreen() {
   const lastUpdated = useStepStore((s) => s.lastUpdated);
 
   return (
-    <SafeAreaView className="flex-1 bg-base-100">
-      <ScrollView contentContainerClassName="pb-6" className="flex-1">
+    <SafeAreaView className="flex-1 bg-base-100" edges={['bottom']}>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingTop: 16, paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text className="text-xs font-semibold text-neutral-content mx-4 mb-4 tracking-widest">
+          STEPS
+        </Text>
+
         <StepCounter
           todaySteps={todaySteps}
           lifetimeSteps={lifetimeSteps}

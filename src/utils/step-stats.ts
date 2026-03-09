@@ -52,7 +52,7 @@ export function calculateStepStats(input: StepStatsInput): StepStats {
 
   // --- Goal progress ---
   const goalMet = todaySteps >= dailyStepGoal;
-  const goalProgress = Math.min(1, todaySteps / dailyStepGoal);
+  const goalProgress = dailyStepGoal > 0 ? Math.min(1, todaySteps / dailyStepGoal) : 0;
 
   // --- Streaks (based on goalMetDates) ---
   const { streak, streakAtRisk, bestStreak } = calculateStreaks(goalMetDates, goalMet, todayDate);
