@@ -581,7 +581,137 @@ Before any narrative content is considered complete:
 
 ---
 
-## 9. Open Questions
+## 9. Combat and Danger
+
+> The world is dangerous. Not because it wants to hurt you, but because the
+> things that kept people safe are gone.
+
+### 9.1 Combat Philosophy
+
+Combat in The Long Walk is survival and protection, not heroic conquest. The player
+fights because the world demands it: wildlife mutated by the cataclysm, residual
+energy that coalesced into hostile forms, and desperate people who chose violence
+over trust.
+
+The player does not seek battle. They endure it, prepare for it, and when
+overwhelmed, they retreat. The game never frames combat as glorious. Encounter
+descriptions emphasize *what you're protecting* or *what you're clearing a path
+through*, not the act of killing itself:
+
+- "Defend the Trade Route" (protecting the connections you've built)
+- "Clear the Collapsed Tunnel" (making paths safe for others)
+- "Disrupt the Anomaly" (containing cataclysm remnants before they spread)
+- "Hold the Watchtower" (guarding a settlement through the night)
+
+**Retreat, not death.** When the player is overwhelmed, they pull back with 1 HP.
+No dramatic death screen, no respawn timer. A survivor knows when to leave. This
+is thematically consistent with the player character: a walker, a connector, not
+a martyr.
+
+### 9.2 Three Sources of Danger
+
+#### Mutated Wildlife
+
+The cataclysm rewrote the natural world. Animals adapted to a broken environment
+in ways nobody predicted. They are bigger, stranger, and less afraid of people.
+Ecosystems that once avoided human settlements now overlap with them.
+
+The mutations are not uniform. Some creatures grew crystalline structures along
+their bodies. Others developed sensitivity to cataclysm energy, flickering in and
+out of perception near residual hotspots. None of them are "monsters" in the
+traditional sense. They are animals responding to a world that changed faster than
+evolution should allow.
+
+**Seed creatures** (living roster, will expand per biome):
+
+| Creature | Description | Tier |
+|----------|-------------|------|
+| Dust Wolf | Pack hunters adapted to ash wastes. Lean, fast, coordinated. Not individually dangerous, but they rarely travel alone. | Starting |
+| Thornwing | Large birds with barbed feathers that shed like caltrops. Territorial around nesting grounds in ruins. | Starting |
+| Razorback | Boar-like creature with crystalline growths along its spine. Aggressively territorial. The crystals hum faintly. | Early |
+| Ridge Serpent | Constrictor adapted to rocky terrain. Ambush predator. Settlers call them "the patient ones." | Early-Mid |
+| Ironhide Crawler | Insectoid, heavily armored, slow. Burrows through ruins and collapsed infrastructure. Settlers avoid their tunnels. | Mid |
+| Flicker Stalker | Predator that phases in and out of visibility near cataclysm scars. Nobody agrees on what it actually looks like. | Mid |
+| Ash Bear | Massive, heat-resistant. Dens in volcanic fissures and geothermal vents that opened during the cataclysm. | Mid-Late |
+| Spire Raptor | Nests on the highest ruins. Dive-attacks anything that enters its territory. Feathers conduct static charge. | Late |
+| Deepmaw | Lives in subterranean ruins. Eyeless, navigates by vibration. Settlers hear them before they see them. | Late |
+| Colossus Beetle | The size of a cart. Chitin plates thick enough to deflect blades. Slow, but devastating when provoked. | Endgame |
+
+#### Cataclysm Remnants
+
+The cataclysm left scars in the world that never healed. In some places, the
+energy that broke everything still pools, condenses, and moves. These are not
+creatures in any biological sense. They are phenomena: patterns of force that
+behave as if they have intent.
+
+Different settlements have different names for them. Some call them ghosts. Some
+call them echoes. Some call them the world's immune response, trying to purge
+whatever is left. Diviners walk toward them. Everyone else walks away.
+
+| Entity | Description | Tier |
+|--------|-------------|------|
+| Drift | Formless energy clusters that float near cataclysm scars. Erratic, harmless until disturbed. Then violent. | Starting-Early |
+| Echo | Humanoid silhouettes that repeat actions from before the collapse. Walk the same path, mime the same gestures. Harmless until threatened, then they remember violence too. | Mid |
+| Pulse Wraith | Concentrated energy that moves with purpose through ruins. Leaves a residue that makes skin tingle and metal corrode. | Mid |
+| Fracture Golem | Chunks of terrain held together by cataclysm energy. Walls, floor, debris assembled into a roughly bipedal form. Slow. Each hit scatters pieces that reassemble. | Late |
+| Rift Warden | Stationary entities that guard cataclysm epicenters. They do not chase. They do not leave. But anything that enters their space does not leave easily either. | Late |
+| Cataclysm Shade | The rarest and most dangerous remnant. Appears only in the deepest ruins, where the cataclysm hit hardest. Some diviners believe they are fragments of whatever caused the collapse itself. | Endgame |
+
+#### Human Threats
+
+Not all survivors chose to rebuild. Some chose to take. The game does not frame
+human enemies as evil. They are desperate, misguided, or broken in ways the player
+might recognize. A scavenger stealing supplies is not a villain. They are someone
+whose settlement failed.
+
+The nuance matters: the Zealots who worship the cataclysm are not cartoonish
+cultists. They are people who found meaning in destruction because the alternative
+was meaninglessness. The game presents them as wrong, but understandably wrong.
+
+| Threat | Description | Tier |
+|--------|-------------|------|
+| Scavenger | Solo operators who strip ruins and defend their claims. Not organized, not malicious. Just territorial. | Starting |
+| Drifter | Nomads who travel between settlements, taking what they need. Some trade fairly. Some don't. | Early-Mid |
+| Raider | Organized bands that control territory through force. Often former settlement members whose community collapsed a second time. | Mid |
+| Zealot Acolyte | Followers of groups that venerate the cataclysm as divine judgment. They believe the world *should* have ended and resent those rebuilding it. | Mid-Late |
+| Zealot Champion | Zealot leaders, trained and equipped. Their conviction makes them dangerous. They fight for meaning, not resources. | Late |
+| Warlord | Rare figures who've consolidated enough power to rule through force. They build something that looks like a settlement but functions like a cage. | Endgame |
+
+### 9.3 Dungeons and Raids
+
+Each biome can have dedicated combat areas: side paths, ruins, and underground
+complexes that branch off the main zone map. These are combat-focused challenges
+with longer enemy sequences, higher difficulty, and unique rewards.
+
+Dungeons are narratively tied to their biome's theme:
+
+- **Al Fakhr**: "The Unfinished Tower." A construction project so ambitious it
+  attracted cataclysm energy. The builders' pride created something they couldn't
+  control. Now the half-built structure is full of Fracture Golems assembled from
+  the building materials, and Echoes of the workers who refused to stop.
+- **Future biomes**: Each dungeon concept should emerge from the biome's emotional
+  theme, not from generic "there's a cave with monsters" design.
+
+**[OPEN]**: Specific dungeon designs per biome. These depend on the biome roster
+being finalized.
+
+### 9.4 Combat and the Economy
+
+Combat drops materials that cannot be obtained any other way. This creates a
+closed loop where every skill category depends on every other:
+
+- **Hides** (from mutated wildlife): Used by Tinkering and Smithing for armor
+- **Bones and spines** (from kills): Fuel for Devotion, ingredients for Alchemy
+- **Energy and residue** (from cataclysm remnants): Used by Runecraft and Alchemy
+- **Salvage and tokens** (from human threats): Used by Tinkering, or traded
+
+The player who only gathers will eventually need combat drops to craft better gear.
+The player who only fights will run out of food and potions without gathering and
+production. Every skill feeds every other skill. No path is self-sufficient.
+
+---
+
+## 10. Open Questions
 
 A living inventory of unresolved design decisions. Items are removed when resolved
 (with the resolution documented in the relevant section above) — not accumulated
@@ -600,3 +730,9 @@ indefinitely.
 | Voice narration production pipeline | Recording, editing, format, integration — see Section 7.6 |
 | How placeholder zones transition to narrative biomes | Homestead likely becomes starting settlement; others TBD |
 | Biome ordering and emotional arc of the full journey | Which emotions come early vs. late matters thematically |
+| Combat formula specifics | Accuracy, max hit, damage reduction equations. To be defined during Phase 3 implementation |
+| Auto-eat threshold design | Fixed percentage (e.g., 50% HP) or tiered upgrade system (like Melvor Idle)? |
+| Devotion skill mechanics | Prayer points, drain rate, buff selection UI, which items fuel it |
+| Dungeon encounter design per biome | Each dungeon should emerge from the biome's emotional theme |
+| Combat level and zone gating interaction | How combat stats interact with totalLevel for zone unlock requirements |
+| Creature expansion per biome | Each new biome needs region-specific wildlife, remnants, and human threats |
