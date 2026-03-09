@@ -15,6 +15,8 @@ export interface JobDefinition {
   id: JobId;
   name: string;
   description: string;
+  /** UI grouping category. */
+  category: JobCategory;
   /** Max level for this job. */
   maxLevel: number;
   /** Hex accent color for UI theming. */
@@ -25,8 +27,26 @@ export interface JobDefinition {
   iconLibrary: 'Ionicons' | 'MaterialCommunityIcons';
 }
 
+/** Job category for UI grouping. */
+export type JobCategory = 'combat' | 'gathering' | 'production' | 'wayfaring';
+
 /** Item category for grouping in inventory. */
-export type ItemCategory = 'log' | 'fish' | 'ore' | 'gem' | 'herb' | 'food' | 'equipment' | 'misc';
+export type ItemCategory =
+  | 'log'
+  | 'fish'
+  | 'ore'
+  | 'gem'
+  | 'herb'
+  | 'food'
+  | 'equipment'
+  | 'misc'
+  | 'component'
+  | 'potion'
+  | 'rune'
+  | 'hide'
+  | 'bone'
+  | 'energy'
+  | 'building_material';
 
 /** Re-export ItemRarity so consumers don't need to import from loot-types directly. */
 export type { ItemRarity } from '../loot/loot-types';

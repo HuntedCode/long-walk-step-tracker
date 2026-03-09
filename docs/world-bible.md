@@ -43,7 +43,7 @@ The game operates on two independent layers:
 
 | Layer | What it is | Who it's for |
 |-------|-----------|--------------|
-| **The Skeleton** | PLATINUM stats, jobs, gear, levels, items, step-driven progression | Every player — the "number go up" experience |
+| **The Skeleton** | Skills (22 jobs), gear, levels, items, step-driven progression | Every player — the "number go up" experience |
 | **The Soul** | Biomes, NPCs, companion narration, emotional themes, connection quests | Players who choose to engage — optional but rewarding |
 
 Neither layer is lesser. The game does not punish disengagement with the narrative.
@@ -517,16 +517,7 @@ New narrative event types will be needed:
 
 These events flow through `processGameTick` in `src/game/core/game-tick.ts`.
 
-### 7.5 PLATINUM Stats in the World
-
-**[OPEN]**: How the eight PLATINUM stats (Power, Luck, Agility, Toughness,
-Intelligence, Navigation, Utility, Magic) connect narratively to the world.
-
-Possible direction: Stats are universal human qualities that the collapse did not
-destroy. Walking literally rebuilds them — step by step, the player recovers what
-was lost. But this needs dedicated design work before committing.
-
-### 7.6 Voice Narration Pipeline
+### 7.5 Voice Narration Pipeline
 
 **[OPEN]**: Technical implementation of voice narration.
 
@@ -601,7 +592,7 @@ indefinitely.
 | Full biome roster and emotion mapping | Working list in Section 3.3 — needs curation and ordering |
 | Whether El Qabul exists as a reachable location | The biggest narrative question. Leave open until late-game arc is clear |
 | Companion's name, backstory, and character arc | Core character — needs dedicated design work |
-| How PLATINUM stats connect to the world narratively | See Section 7.5 for initial direction |
+| How skill categories map to narrative themes | Combat, Gathering, Production, and Wayfaring should each resonate with biome emotions |
 | NPC theories about the cataclysm | Per-biome writing task — different perspectives per region |
 | Whether the game has a definitive ending | Tied to El Qabul's existence question |
 | How much time has passed since the collapse | Affects NPC ages, memory of "before," reconstruction progress |

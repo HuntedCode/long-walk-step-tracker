@@ -14,37 +14,25 @@ progression — leveling stats, training jobs, completing quests, and engaging i
 
 ### Development Phases
 
-1. **MVP**: PLATINUM stat system + Jobs — stats level from steps, jobs use stats
+1. **MVP**: Skill system (22 jobs) — steps fuel job XP, activities produce items
 2. **Phase 2**: Quest system — step goals unlock quests and story progression
 3. **Phase 3**: Combat & loot system — steps generate encounters and rewards
 
 ---
 
-## Game Design: PLATINUM Stats + Jobs
+## Game Design: Skills (Jobs)
 
-### Core Stats (PLATINUM) — leveled directly by walking
+### 22 Skills organized into 4 categories
 
-| Letter | Stat         | Description                                    |
-| ------ | ------------ | ---------------------------------------------- |
-| P      | Power        | Raw physical strength                          |
-| L      | Luck         | Chance-based bonuses, critical hits, rare drops |
-| A      | Agility      | Speed, reflexes, movement efficiency           |
-| T      | Toughness    | Durability, damage resistance, stamina         |
-| I      | Intelligence | Knowledge, XP efficiency bonuses               |
-| N      | Navigation   | Exploration bonuses, route discovery           |
-| U      | Utility      | Crafting efficiency, tool use, versatility     |
-| M      | Magic        | Supernatural abilities, enchantments           |
+| Category | Skills |
+| -------- | ------ |
+| Combat (6) | Might, Marksmanship, Resonance, Fortitude, Vitality, Devotion |
+| Gathering (5) | Mining, Woodcutting, Fishing, Foraging, Salvaging |
+| Production (7) | Cooking, Smithing, Alchemy, Tinkering, Runecraft, Construction, Firemaking |
+| Wayfaring (4) | Wayfinding, Hunting, Divination, Connection |
 
-### Jobs — trainable activities that use core stats as modifiers
-
-| Job         | Related Stats          | Description                       |
-| ----------- | ---------------------- | --------------------------------- |
-| Mining      | Power + Toughness      | Extract resources from the earth  |
-| Woodcutting | Power + Agility        | Harvest timber and wood           |
-| Cooking     | Intelligence + Utility | Prepare food and consumables      |
-
-Steps level PLATINUM stats directly. Jobs use stat levels as requirements and modifiers.
-New jobs can be added by editing data files — no engine changes required.
+Steps fuel job activities. Activities grant XP for their parent job.
+New jobs can be added by editing `src/data/jobs.ts` — no engine changes required.
 
 ---
 
@@ -86,29 +74,24 @@ LongWalk/
 │   ├── (tabs)/                   # Tab navigator group
 │   │   ├── _layout.tsx           # Tab bar configuration
 │   │   ├── dashboard.tsx         # Main screen — steps, XP, quick stats
-│   │   ├── skills.tsx            # PLATINUM stats + Jobs view
+│   │   ├── skills.tsx            # Skills view (22 jobs grouped by category)
 │   │   ├── journal.tsx           # Activity log / quest log (Phase 2)
 │   │   └── profile.tsx           # Player profile and settings
 │   └── (modals)/                 # Modal screens
 │       ├── _layout.tsx
-│       ├── skill-detail.tsx      # Individual stat/job deep-dive
+│       ├── skill-detail.tsx      # Individual skill deep-dive
 │       ├── level-up.tsx          # Level-up celebration
 │       └── settings.tsx          # App settings
 │
 ├── src/
 │   ├── components/               # Reusable UI components
 │   │   ├── ui/                   # Generic primitives (ProgressBar, Button, etc.)
-│   │   ├── stats/                # PLATINUM stat components
-│   │   ├── jobs/                 # Job-specific components
+│   │   ├── jobs/                 # Job/skill-specific components
 │   │   ├── steps/                # Step tracking components
 │   │   └── layout/               # Layout wrappers
 │   │
 │   ├── game/                     # CORE GAME ENGINE — pure TS, no React
-│   │   ├── stats/                # PLATINUM stat engine
-│   │   │   ├── stat-engine.ts    # XP calculation, level-up logic
-│   │   │   ├── stat-formulas.ts  # XP curves, level thresholds
-│   │   │   └── stat-types.ts     # TypeScript interfaces
-│   │   ├── jobs/                 # Job system engine
+│   │   ├── jobs/                 # Job/skill system engine
 │   │   │   ├── job-engine.ts     # Job progression logic
 │   │   │   └── job-types.ts      # Job interfaces
 │   │   ├── quests/               # Quest engine (Phase 2)
@@ -119,15 +102,13 @@ LongWalk/
 │   │       └── formulas.ts       # Shared math formulas
 │   │
 │   ├── data/                     # Static game content (data-driven)
-│   │   ├── stats.ts              # PLATINUM stat definitions
-│   │   ├── jobs.ts               # Job definitions
+│   │   ├── jobs.ts               # Job/skill definitions (22 skills)
 │   │   ├── milestones.ts         # Step milestone definitions
 │   │   ├── quests.ts             # Quest definitions (Phase 2)
 │   │   └── items.ts              # Item definitions (Phase 3)
 │   │
 │   ├── stores/                   # Zustand stores
 │   │   ├── usePlayerStore.ts     # Player identity, lifetime stats
-│   │   ├── useStatStore.ts       # PLATINUM stat levels and XP
 │   │   ├── useStepStore.ts       # Step sessions, daily counts, history
 │   │   ├── useJobStore.ts        # Job progress
 │   │   └── storage.ts            # Persistence adapter
@@ -135,7 +116,6 @@ LongWalk/
 │   ├── hooks/                    # Custom React hooks
 │   │   ├── usePedometer.ts       # expo-sensors Pedometer wrapper
 │   │   ├── useGameTick.ts        # Steps -> game events bridge
-│   │   ├── useStatProgress.ts    # Derived stat data for UI
 │   │   └── useStepGoal.ts        # Daily step goal logic
 │   │
 │   ├── services/                 # External integrations
@@ -180,6 +160,12 @@ LongWalk/
 
 ## Coding Conventions
 
+### Writing Style
+
+- **Never use em dashes** (the long dash: `—`). Use commas, periods, colons, or
+  parentheses instead. This applies to all text: code comments, descriptions,
+  flavor text, documentation, and commit messages.
+
 ### TypeScript
 
 - Strict mode enabled (`"strict": true`)
@@ -193,14 +179,14 @@ LongWalk/
 | Thing                  | Convention           | Example                    |
 | ---------------------- | -------------------- | -------------------------- |
 | Component files        | PascalCase.tsx       | `StatCard.tsx`             |
-| Non-component files    | kebab-case.ts        | `stat-engine.ts`           |
-| Interfaces/Types       | PascalCase           | `StatDefinition`           |
-| Zustand stores         | camelCase with `use` | `useStatStore`             |
+| Non-component files    | kebab-case.ts        | `job-engine.ts`            |
+| Interfaces/Types       | PascalCase           | `JobDefinition`            |
+| Zustand stores         | camelCase with `use` | `useJobStore`              |
 | Hooks                  | camelCase with `use` | `usePedometer`             |
 | Constants              | SCREAMING_SNAKE_CASE | `MAX_STAT_LEVEL`           |
 | Functions              | camelCase            | `calculateXpForLevel`      |
-| React components       | PascalCase           | `StatProgressRing`         |
-| Game data arrays       | camelCase plural     | `statDefinitions`          |
+| React components       | PascalCase           | `SkillCard`                |
+| Game data arrays       | camelCase plural     | `jobDefinitions`           |
 
 ### Component Patterns
 
@@ -211,13 +197,13 @@ LongWalk/
 - Route screens in `app/` are thin — they compose components, not logic
 
 ```typescript
-interface StatCardProps {
-  statId: string;
-  onPress: (statId: string) => void;
+interface SkillCardProps {
+  job: JobDefinition;
+  state: JobState;
+  isActive: boolean;
 }
 
-export function StatCard({ statId, onPress }: StatCardProps) {
-  const stat = useStatStore((s) => s.stats[statId]);
+export function SkillCard({ job, state, isActive }: SkillCardProps) {
   // ...
 }
 ```
@@ -226,7 +212,7 @@ export function StatCard({ statId, onPress }: StatCardProps) {
 
 - `src/game/` is React-free: no imports from `react` or `react-native`
 - All game formulas in dedicated files, not scattered across components
-- Data-driven content: new stats/jobs/quests added by editing `src/data/` files
+- Data-driven content: new jobs/quests added by editing `src/data/` files
 - Engine functions are pure: same inputs = same outputs, no side effects
 
 ---
@@ -241,8 +227,7 @@ other via `getState()`.
 ```
 usePlayerStore  — Player identity, total lifetime stats
 useStepStore    — Pedometer session, daily step counts, history
-useStatStore    — PLATINUM stat levels and XP
-useJobStore     — Job progress and levels
+useJobStore     — Job/skill progress and levels (22 skills)
 useQuestStore   — Quest status (Phase 2)
 useInventoryStore — Items, equipment (Phase 3)
 ```
@@ -253,20 +238,20 @@ All stores use Zustand's `persist` middleware with AsyncStorage:
 
 ```typescript
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persist } from 'zustand/middleware';
+import { zustandStorage } from './storage';
 
-export const useStatStore = create<StatStoreState>()(
+export const useJobStore = create<JobStore>()(
   persist(
     (set, get) => ({
-      stats: {},
-      addXp: (statId, amount) => {
-        // Delegate to src/game/stats/stat-engine.ts
+      jobs: createInitialJobs(),
+      addXp: (rewards) => {
+        // Apply XP rewards from activity completions
       },
     }),
     {
-      name: 'longwalk-stats',
-      storage: createJSONStorage(() => AsyncStorage),
+      name: 'longwalk-jobs',
+      storage: zustandStorage,
     }
   )
 );
@@ -280,7 +265,7 @@ Device Pedometer
     → useStepStore (accumulates raw step counts)
     → useGameTick hook (converts step deltas into game events)
     → Game Engine (src/game/) — pure functions process events
-    → Zustand Stores (useStatStore, useJobStore, etc.)
+    → Zustand Stores (useJobStore, useInventoryStore, etc.)
     → React Components (re-render via selectors)
 ```
 
@@ -384,8 +369,8 @@ same branch.** Stale docs are worse than no docs.
 ### Branch Naming Examples
 
 ```
-feature/stats/xp-calculation
-feature/stats/level-up-screen
+feature/jobs/xp-calculation
+feature/jobs/level-up-screen
 feature/steps/pedometer-integration
 feature/jobs/mining-system
 feature/ui/dashboard-layout
@@ -399,16 +384,16 @@ refactor/extract-shared-progress-bar
 <type>(<scope>): <short description>
 
 Types: feat, fix, refactor, style, test, docs, chore
-Scopes: stats, steps, jobs, quests, combat, ui, nav, store, config
+Scopes: jobs, steps, quests, combat, ui, nav, store, config
 ```
 
 Examples:
 ```
-feat(stats): add XP calculation engine with RS-style exponential curve
+feat(jobs): add XP calculation engine with RS-style exponential curve
 feat(steps): integrate expo-sensors Pedometer subscription
-fix(store): persist stat state across app restarts
+fix(store): persist job state across app restarts
 refactor(ui): extract ProgressBar into reusable component
-test(stats): add unit tests for level-up threshold calculation
+test(jobs): add unit tests for level-up threshold calculation
 chore(config): configure NativeWind and Tailwind theme
 ```
 
@@ -447,8 +432,7 @@ component file → Pure UI (renders hook data, dispatches store actions)
 
 ### Adding New Content
 
-- New stat: add entry to `src/data/stats.ts`. Done.
-- New job: add entry to `src/data/jobs.ts`. Done.
+- New job/skill: add entry to `src/data/jobs.ts` with category. Done.
 - New quest (Phase 2): add entry to `src/data/quests.ts`. The quest engine
   automatically evaluates conditions on each game tick.
 
@@ -490,8 +474,8 @@ The visual layer is decoupled from game logic:
 ### Test Location
 
 Tests mirror `src/` structure in `__tests__/`:
-- `__tests__/game/stats/stat-engine.test.ts`
-- `__tests__/stores/useStatStore.test.ts`
+- `__tests__/game/jobs/job-engine.test.ts`
+- `__tests__/stores/useJobStore.test.ts`
 
 ---
 
@@ -562,11 +546,11 @@ npx expo start --clear
 
 ### Screens
 
-- **Dashboard** (tab): Steps today, total XP, daily goal ring, top stats summary
-- **Skills** (tab): PLATINUM stat grid + job list, levels and progress bars
-- **Journal** (tab): Daily step history, activity feed ("Gained 150 Power XP")
+- **Dashboard** (tab): Steps today, total XP, daily goal ring, top skills summary
+- **Skills** (tab): 22 skills grouped by category, levels and progress bars
+- **Journal** (tab): Daily step history, activity feed ("Gained 150 Mining XP")
 - **Profile** (tab): Player name, lifetime steps, combined level, settings
-- **Stat Detail** (modal): Full stat info, XP progress, history chart
+- **Skill Detail** (modal): Full skill info, XP progress, history chart
 - **Level Up** (modal): Celebration with animation and new level display
 
 ### Core Gameplay Loop
@@ -576,8 +560,8 @@ npx expo start --clear
 2. Backfill historical steps (iOS) → distribute XP
 3. Pedometer subscribes for real-time steps
 4. Every N steps, game tick runs:
-   a. Convert steps to XP for each PLATINUM stat
-   b. Update stat XP in store
+   a. Progress active activity, award job XP on completion
+   b. Update job XP in store
    c. Check for level-ups → trigger celebration modal
 5. Dashboard updates in real-time
 6. On close: state persists via Zustand middleware

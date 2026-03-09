@@ -100,7 +100,7 @@ export function ZoneListCard({
         </View>
 
         {/* Description */}
-        <Text className="text-xs mb-2" style={{ color: descColor }} numberOfLines={1}>
+        <Text className="text-xs mb-2" style={{ color: descColor, minHeight: 32 }} numberOfLines={2}>
           {zone.description}
         </Text>
 

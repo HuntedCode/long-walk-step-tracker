@@ -73,14 +73,19 @@ xpForLevel(level) = floor( sum(floor(i + 300 × 2^(i/7))) / 4 )  for i = 1 to le
 - `xpToNextLevel(xp)`: XP remaining until next level. Returns 0 at level 99.
 
 ### Total level
-`totalLevel` = sum of all job levels. Starts at 3 (3 jobs × level 1).
+`totalLevel` = sum of all job levels. Starts at 22 (22 jobs × level 1).
 Computed via `useJobStore.getTotalLevel()`. Used for:
 - Zone unlock gates (`totalLevel >= zone.unlockRequirement.totalLevel`)
 - Step bank capacity (`1000 + totalLevel × 100`)
 
 ### Current jobs (`src/data/jobs.ts`)
-Woodcutting, Fishing, Mining — all max level 99. New jobs: add to `JOB_IDS`
-and `jobDefinitions`. No engine changes needed.
+22 skills organized into 4 categories — all max level 99:
+- **Combat** (6): Might, Marksmanship, Resonance, Fortitude, Vitality, Devotion
+- **Gathering** (5): Mining, Woodcutting, Fishing, Foraging, Salvaging
+- **Production** (7): Cooking, Smithing, Alchemy, Tinkering, Runecraft, Construction, Firemaking
+- **Wayfaring** (4): Wayfinding, Hunting, Divination, Connection
+
+New jobs: add to `JOB_IDS` and `jobDefinitions` with a `category`. No engine changes needed.
 
 ---
 
@@ -171,7 +176,8 @@ Items keyed by ID with quantities. Stackable items accumulate without limit.
 `stackable`, and `category`. Current items are placeholders — names and
 descriptions will be refined as the world bible evolves.
 
-**Item categories**: log, fish, ore, gem, herb, food, equipment, misc.
+**Item categories**: log, fish, ore, gem, herb, food, equipment, misc,
+component, potion, rune, hide, bone, energy, building_material.
 
 **Rarity tiers**: common, uncommon, rare, epic, legendary.
 

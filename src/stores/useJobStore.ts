@@ -67,6 +67,17 @@ export const useJobStore = create<JobStore>()(
     {
       name: 'longwalk-jobs',
       storage: zustandStorage,
+      version: 2,
+      merge: (persisted, current) => {
+        const merged = { ...(current as JobStore), ...(persisted as Partial<JobStore>) };
+        // Ensure all defined jobs exist (handles new jobs added after first install)
+        for (const def of jobDefinitions) {
+          if (!merged.jobs[def.id]) {
+            merged.jobs[def.id] = { jobId: def.id, xp: 0, level: 1 };
+          }
+        }
+        return merged;
+      },
     },
   ),
 );

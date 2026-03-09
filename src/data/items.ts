@@ -100,7 +100,7 @@ export const itemDefinitions: ItemDefinition[] = [
     value: 7,
     stackable: true,
   },
-  // --- Rare drops (El Qabul themed — placeholders) ---
+  // --- Rare drops (El Qabul themed, placeholders) ---
   {
     id: ITEM_IDS.ASHEN_HEARTWOOD,
     name: 'Ashen Heartwood',
