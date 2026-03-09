@@ -9,12 +9,6 @@ import { useJobStore } from '@/src/stores/useJobStore';
 import { ZoneListCard } from '@/src/components/map/ZoneListCard';
 import type { ZoneCardState, JobChip } from '@/src/components/map/ZoneListCard';
 
-const JOB_ICONS: Record<string, { icon: string; iconLibrary: 'Ionicons' | 'MaterialCommunityIcons' }> = {
-  woodcutting: { icon: 'axe', iconLibrary: 'MaterialCommunityIcons' },
-  fishing: { icon: 'fish-outline', iconLibrary: 'Ionicons' },
-  mining: { icon: 'pickaxe', iconLibrary: 'MaterialCommunityIcons' },
-};
-
 export default function MapScreen() {
   const currentZoneId = usePlayerStore((s) => s.currentZoneId);
   const travel = usePlayerStore((s) => s.travel);
@@ -55,7 +49,10 @@ export default function MapScreen() {
     const qualified = zoneActivities.some((a) =>
       a.requirements.every((r) => (jobs[r.jobId]?.level ?? 1) >= r.level)
     );
-    const iconDef = JOB_ICONS[jobId] ?? { icon: 'ellipse-outline', iconLibrary: 'Ionicons' as const };
+    const jobDef = jobDefinitionMap[jobId];
+    const iconDef = jobDef
+      ? { icon: jobDef.icon, iconLibrary: jobDef.iconLibrary }
+      : { icon: 'ellipse-outline', iconLibrary: 'Ionicons' as const };
     return { jobName, ...iconDef, qualified };
   }
 

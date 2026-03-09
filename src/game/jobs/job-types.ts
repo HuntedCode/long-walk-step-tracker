@@ -17,6 +17,12 @@ export interface JobDefinition {
   description: string;
   /** Max level for this job. */
   maxLevel: number;
+  /** Hex accent color for UI theming. */
+  color: string;
+  /** Icon name (from Ionicons or MaterialCommunityIcons). */
+  icon: string;
+  /** Which icon library the icon belongs to. */
+  iconLibrary: 'Ionicons' | 'MaterialCommunityIcons';
 }
 
 /** Item category for grouping in inventory. */
