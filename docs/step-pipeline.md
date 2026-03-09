@@ -31,9 +31,13 @@ but the *semantics* of the callback data differ:
 
 | Platform | Package | Callback `steps` value | Store action called |
 |----------|---------|----------------------|-------------------|
-| Android | `expo-android-pedometer` | Today's total from sensor since midnight | `backfillToday(steps)` |
+| Android | `expo-android-pedometer` (lazy-loaded) | Today's total from sensor since midnight | `backfillToday(steps)` |
 | iOS | `expo-sensors` Pedometer | Cumulative since subscription start | `addSteps(delta)` |
 | Web | N/A (unavailable) | — | Use StepSimulator |
+
+> **Lazy loading:** `expo-android-pedometer` is loaded via `require()` on first
+> use rather than a top-level import. This prevents import failures on iOS, where
+> the native Android module is not available.
 
 **Why this matters:** `backfillToday` and `addSteps` have completely different
 semantics. Android sends the same total repeatedly — only the high-water mark
