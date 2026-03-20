@@ -14,8 +14,12 @@ android/
 *.p8
 *.p12
 *.key
+*.keystore
 *.mobileprovision
 *.orig.*
+*.apk
+*.aab
+*.hprof
 
 # Environment
 .env
