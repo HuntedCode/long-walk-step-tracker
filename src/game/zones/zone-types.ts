@@ -1,4 +1,5 @@
 import type { ZoneId } from '../jobs/job-types';
+import type { BiomeId } from '../biomes/biome-types';
 
 /** Requirement to unlock a zone (e.g., total level >= 5). */
 export interface ZoneUnlockRequirement {
@@ -18,8 +19,12 @@ export interface ZoneDefinition {
   id: ZoneId;
   name: string;
   description: string;
-  /** Short biome label (e.g. "FOREST", "COASTAL"). */
-  biome: string;
+  /** Which biome this zone belongs to. */
+  biomeId: BiomeId;
+  /** Whether this is the central/primary zone of its biome. */
+  isCentralCity: boolean;
+  /** Terrain type for UI display (e.g., 'CITY', 'FOREST', 'HIGHLAND'). */
+  terrain: string;
   /** Accent color for UI theming (hex string). */
   color: string;
   /** Ionicon name for the zone icon. */

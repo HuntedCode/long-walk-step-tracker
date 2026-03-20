@@ -6,6 +6,8 @@ import type { ItemReward } from '@/src/game/jobs/job-types';
 interface InventoryStoreState {
   /** Item quantities keyed by item ID. Only items with quantity > 0 appear. */
   items: Record<string, number>;
+  /** Whether the inventory UI shows all defined items (including unowned). */
+  showAllItems: boolean;
 }
 
 interface InventoryStoreActions {
@@ -17,6 +19,8 @@ interface InventoryStoreActions {
   getItemCount: (itemId: string) => number;
   /** Check if the player has at least `quantity` of an item. */
   hasItems: (itemId: string, quantity: number) => boolean;
+  /** Toggle whether the inventory UI shows all defined items. */
+  toggleShowAllItems: () => void;
 }
 
 type InventoryStore = InventoryStoreState & InventoryStoreActions;
@@ -25,6 +29,7 @@ export const useInventoryStore = create<InventoryStore>()(
   persist(
     (set, get) => ({
       items: {},
+      showAllItems: false,
 
       addItems: (rewards: ItemReward[]) => {
         if (rewards.length === 0) return;
@@ -61,10 +66,22 @@ export const useInventoryStore = create<InventoryStore>()(
       hasItems: (itemId: string, quantity: number) => {
         return (get().items[itemId] ?? 0) >= quantity;
       },
+
+      toggleShowAllItems: () => {
+        set((s) => ({ showAllItems: !s.showAllItems }));
+      },
     }),
     {
       name: 'longwalk-inventory',
       storage: zustandStorage,
+      version: 1,
+      migrate: (persisted: unknown, version: number) => {
+        const state = persisted as InventoryStoreState;
+        if (version < 1) {
+          return { ...state, showAllItems: false };
+        }
+        return state;
+      },
     },
   ),
 );

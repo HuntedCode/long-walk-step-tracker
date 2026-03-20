@@ -10,9 +10,10 @@
 | Store | Key | Persisted | Version | Purpose |
 |-------|-----|-----------|---------|---------|
 | `useStepStore` | `longwalk-steps` | Yes | 1 | Daily/lifetime step counts, goals, streak tracking |
-| `usePlayerStore` | `longwalk-player` | Yes | 0 | Current zone, activity, travel, step bank, lastProcessedSteps |
+| `usePlayerStore` | `longwalk-player` | Yes | 1 | Current zone, activity, travel, step bank, lastProcessedSteps |
 | `useJobStore` | `longwalk-jobs` | Yes | 0 | Job XP and levels per job |
-| `useInventoryStore` | `longwalk-inventory` | Yes | 0 | Item quantities |
+| `useInventoryStore` | `longwalk-inventory` | Yes | 1 | Item quantities, show-all-items toggle |
+| `useBiomeStore` | `longwalk-biomes` | Yes | 0 | Biome discovery and connection state |
 | `useEventStore` | — | **No** | — | Ephemeral game event queue (toasts) |
 
 All persisted stores use `zustandStorage` from `src/stores/storage.ts`
@@ -36,6 +37,8 @@ Each piece of game state lives in exactly one store:
 | `lastProcessedSteps` | `usePlayerStore` | Baseline for delta calculation |
 | Job XP and levels | `useJobStore` | |
 | Item quantities | `useInventoryStore` | |
+| Show-all-items UI toggle | `useInventoryStore` | Persisted, default false |
+| Biome discovered/connected state | `useBiomeStore` | `biomes{}` record keyed by biome ID |
 | Pending UI notifications | `useEventStore` | Not persisted |
 
 ### Derived values (computed at read time)
@@ -125,6 +128,10 @@ persist(storeConfig, {
 **Current migrations:**
 - `useStepStore` v0 → v1: adds `pendingDailyStepGoal` (null), clamps
   `dailyStepGoal` minimum to 1000
+- `usePlayerStore` v0 → v1: resets `currentZoneId` to new starting zone if the
+  player was in a removed placeholder zone (homestead, whispering_woods,
+  silver_brook, ironpeak_ridge). Clears activity and travel state on reset.
+- `useInventoryStore` v0 → v1: adds `showAllItems` (false)
 
 **To add a migration:** increment `version`, add a case to `migrate` function.
 Each case handles upgrading from the previous version to the current.
@@ -155,6 +162,7 @@ simultaneously. The game tick respects this: Phase 1 (travel) and Phase 2
 | `src/stores/useStepStore.ts` | Step state, goal tracking, day rollover |
 | `src/stores/usePlayerStore.ts` | Player location, mode, bank, lastProcessedSteps |
 | `src/stores/useJobStore.ts` | Job XP/levels, totalLevel computation |
-| `src/stores/useInventoryStore.ts` | Item accumulation |
+| `src/stores/useInventoryStore.ts` | Item accumulation, discovery toggle |
+| `src/stores/useBiomeStore.ts` | Biome discovery/connection tracking |
 | `src/stores/useEventStore.ts` | Ephemeral event queue (not persisted) |
 | `src/hooks/useGameTick.ts` | Cross-store bridge (headless subscription) |

@@ -137,12 +137,78 @@ filters activities by both zone match and requirement check.
 
 ---
 
+## Biome Framework
+
+A biome is a cluster of zones with shared identity, narrative theme, skill
+specialties, NPCs, and quests. Everything that makes a region feel distinct
+lives in the `BiomeDefinition`.
+
+### The 5-Layer Model (`src/game/biomes/biome-types.ts:BiomeDefinition`)
+
+| Layer | Fields | Purpose |
+|-------|--------|---------|
+| **Identity** | `name`, `displayName`, `theme`, `color`, `icon` | Visual and emotional character |
+| **Geography** | `centralZoneId`, `zoneIds`, `discoverySteps` | Which zones belong, how the player finds it |
+| **Content** | `specialtyJobIds`, `encounterStubs` | What skills and combat this biome emphasizes |
+| **Progression** | `levelRange`, `connectionQuest` | Difficulty curve and fast-travel unlock |
+| **Narrative** | `npcs`, `connectionQuest.description` | Characters and story hooks |
+
+### Biome Specialties
+
+Each biome has 2-3 deep skills with multiple activity tiers, plus secondary
+skills with lighter coverage. Some skills may be entirely absent from a biome,
+encouraging travel between regions.
+
+| Biome | Specialty Skills | Notes |
+|-------|-----------------|-------|
+| The Cairn (hub) | None (teaches Foraging, Woodcutting, Cooking at level 1) | Tutorial activities only |
+| Al Fakhr | Mining, Construction, Smithing | Multi-tier activities from level 1-25 |
+
+### Biome Connectivity
+
+Biomes connect through zone-level connections, not a separate biome graph.
+Border zones in one biome have connections to border zones in adjacent biomes.
+
+**Discovery and connection are separate steps:**
+1. **Discover**: Walk enough lifetime steps to reveal the biome on the map
+   (`discoverySteps` threshold). The Cairn has `discoverySteps: 0` (always visible).
+2. **Connect**: Complete the biome's connection questline to unlock fast travel to
+   its central zone. Hub biomes have `connectionQuest: null` (always connected).
+
+### Current Biomes (`src/data/biomes.ts`)
+
+| Biome | Zones | Central Zone | Discovery Steps |
+|-------|-------|-------------|----------------|
+| The Cairn | 2 (The Cairn, The Cookfire) | The Cairn | 0 |
+| Al Fakhr | 18 (see Zones section below) | The Promenade | 2000 |
+
+### Biome Engine (`src/game/biomes/biome-engine.ts`)
+
+Pure functions, no React:
+- `checkDiscovery(lifetimeSteps, biomes, alreadyDiscovered)`: returns newly
+  discoverable biome IDs based on lifetime step threshold
+- `getBiomeForZone(zoneId, biomes)`: finds which biome a zone belongs to
+- `getZonesInBiome(biomeId, biomes, zones)`: returns all zone definitions in a biome
+
+---
+
 ## Zones and Travel
 
 ### Zone definitions (`src/data/zones.ts`)
-4 zones currently: Homestead (start), Whispering Woods, Silver Brook,
-Ironpeak Ridge (requires totalLevel 5). Each has connections to other zones
-with step costs.
+20 zones across 2 biomes: The Cairn (2 hub zones) and Al Fakhr (18 zones
+organized into 6 clusters). Each zone has connections to other zones with
+step costs.
+
+### Al Fakhr zone clusters
+
+| Cluster | Zones | Terrain |
+|---------|-------|---------|
+| City | The Promenade, The Forge Quarter, The High Archive, The Builder's Terrace | CITY |
+| Quarry Highlands | The Quarry Face, Amber Ridge (totalLevel 10), The Cutting Yard | HIGHLAND |
+| The Greenwood | The Lone Garden, The Hidden Spring, Ironwood Grove | FOREST |
+| The Ruins | The Unfinished Reach, The Collapsed Gallery (totalLevel 12), The Old Foundation | RUINS |
+| Outskirts | Dustfall Edge, Pilgrim's Rest | WASTELAND / SETTLEMENT |
+| Story Zones | Karam's Scaffold (totalLevel 15), The Rival's Camp, The Newcomer's Workshop | Mixed |
 
 ### Travel flow (`src/game/zones/zone-engine.ts`)
 1. `startTravel(currentZone, destinationId)` → creates `TravelState`
@@ -444,8 +510,9 @@ All content is data-driven. No engine changes required for any of these:
 
 | Content | File | What to do |
 |---------|------|-----------|
+| New biome | `src/data/biomes.ts` | Add to `BIOME_IDS` + `biomeDefinitions` with zones, NPCs, specialties |
 | New job | `src/data/jobs.ts` | Add to `JOB_IDS` + `jobDefinitions` |
-| New zone | `src/data/zones.ts` | Add to `ZONE_IDS` + `zoneDefinitions` with connections |
+| New zone | `src/data/zones.ts` | Add to `ZONE_IDS` + `zoneDefinitions` with connections and `biomeId` |
 | New activity | `src/data/activities.ts` | Add to `activityDefinitions`, reference job + zone IDs |
 | New item | `src/data/items.ts` | Add to `ITEM_IDS` + `itemDefinitions` |
 | New item category | `src/game/jobs/job-types.ts` | Add to `ItemCategory` union type |
@@ -476,6 +543,10 @@ meets the requirements. Items auto-appear in inventory when earned.
 | `src/stores/useJobStore.ts` | Job XP/level state, totalLevel |
 | `src/stores/useInventoryStore.ts` | Item quantities, add/remove/query |
 | `src/stores/useEventStore.ts` | Ephemeral event queue |
+| `src/stores/useBiomeStore.ts` | Biome discovery and connection state |
+| `src/game/biomes/biome-types.ts` | BiomeDefinition, BiomeState, NpcStub, ConnectionQuestStub |
+| `src/game/biomes/biome-engine.ts` | Biome discovery checks, zone-to-biome lookup |
+| `src/data/biomes.ts` | Biome content definitions (The Cairn, Al Fakhr) |
 | `src/game/combat/` (Phase 3) | Combat engine: turn resolution, damage calc, auto-eat |
 | `src/data/enemies.ts` (Phase 3) | Enemy definitions (bestiary) |
 | `src/data/encounters.ts` (Phase 3) | Encounter definitions (enemies + zones) |

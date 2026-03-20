@@ -1,106 +1,297 @@
 import type { ItemDefinition } from '../game/jobs/job-types';
 
-/**
- * NOTE: All items are placeholders. Names and descriptions will be revisited
- * as game systems mature and the world bible evolves.
- */
-
 export const ITEM_IDS = {
-  // Logs
-  NORMAL_LOG: 'normal_log',
-  OAK_LOG: 'oak_log',
-  WILLOW_LOG: 'willow_log',
-  // Fish
-  RAW_SHRIMP: 'raw_shrimp',
-  RAW_TROUT: 'raw_trout',
-  // Ores
-  COPPER_ORE: 'copper_ore',
-  IRON_ORE: 'iron_ore',
-  SILVER_ORE: 'silver_ore',
-  // Rare drops
+  // ── Hub: The Cairn ──
+  SCRUB_BRUSH: 'scrub_brush',
+  DEADWOOD_SPLINT: 'deadwood_splint',
+  SIMPLE_MEAL: 'simple_meal',
+
+  // ── Al Fakhr: Specialty (Mining/Construction/Smithing) ──
+  SANDSTONE: 'sandstone',
+  AL_FAKHR_MARBLE: 'al_fakhr_marble',
+  GILDED_ORE: 'gilded_ore',
+  SANDSTONE_BLOCK: 'sandstone_block',
+  MARBLE_FITTING: 'marble_fitting',
+
+  // ── Al Fakhr: Secondary ──
+  DUSTBLOOM: 'dustbloom',
+  DESERT_FIG: 'desert_fig',
+  WILD_HERB: 'wild_herb',
+  SPRING_EEL: 'spring_eel',
+  IRONWOOD_LOG: 'ironwood_log',
+  OLD_SCRAP_METAL: 'old_scrap_metal',
+  DUSTBLOOM_TINCTURE: 'dustbloom_tincture',
+  TRAVELERS_STEW: 'travelers_stew',
+  ETCHED_RUNE_SHARD: 'etched_rune_shard',
+  SPRINGMOSS: 'springmoss',
+
+  // ── Al Fakhr: Rare/Story ──
+  BUILDERS_CREST: 'builders_crest',
+  FRAGMENT_OF_AMBITION: 'fragment_of_ambition',
+  FOUNDATION_RELIC: 'foundation_relic',
+
+  // ── General rare drops (not biome-specific) ──
   ASHEN_HEARTWOOD: 'ashen_heartwood',
   DUST_PEARL: 'dust_pearl',
   SCORCHED_RELIC: 'scorched_relic',
   FRACTURED_RUNESTONE: 'fractured_runestone',
+
+  // ── Equipment ──
+  RUSTY_BLADE: 'rusty_blade',
+  BATTERED_SHIELD: 'battered_shield',
 } as const;
 
 export const itemDefinitions: ItemDefinition[] = [
-  // --- Logs ---
+  // ════════════════════════════════════════════════════════════
+  // Hub: The Cairn
+  // ════════════════════════════════════════════════════════════
   {
-    id: ITEM_IDS.NORMAL_LOG,
-    name: 'Normal Log',
-    description: 'A standard log from a common tree.',
+    id: ITEM_IDS.SCRUB_BRUSH,
+    name: 'Scrub Brush',
+    description: 'Dry, fibrous plants pulled from cracked earth. Not much to look at, but they burn well.',
+    category: 'herb',
+    rarity: 'common',
+    value: 1,
+    stackable: true,
+    icon: 'grass',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.DEADWOOD_SPLINT,
+    name: 'Deadwood Splint',
+    description: 'A brittle stick from a long-dead tree. Snaps easily, but good for kindling.',
     category: 'log',
     rarity: 'common',
     value: 1,
     stackable: true,
+    icon: 'tree',
+    iconLibrary: 'MaterialCommunityIcons',
   },
   {
-    id: ITEM_IDS.OAK_LOG,
-    name: 'Oak Log',
-    description: 'A sturdy log from an oak tree.',
-    category: 'log',
-    rarity: 'common',
-    value: 3,
-    stackable: true,
-  },
-  {
-    id: ITEM_IDS.WILLOW_LOG,
-    name: 'Willow Log',
-    description: 'A flexible log from a willow tree.',
-    category: 'log',
-    rarity: 'common',
-    value: 5,
-    stackable: true,
-  },
-  // --- Fish ---
-  {
-    id: ITEM_IDS.RAW_SHRIMP,
-    name: 'Raw Shrimp',
-    description: 'A small shrimp, freshly caught.',
-    category: 'fish',
+    id: ITEM_IDS.SIMPLE_MEAL,
+    name: 'Simple Meal',
+    description: 'Whatever could be scraped together, cooked over an open flame. It fills the stomach.',
+    category: 'food',
     rarity: 'common',
     value: 1,
     stackable: true,
+    icon: 'food-drumstick',
+    iconLibrary: 'MaterialCommunityIcons',
   },
+
+  // ════════════════════════════════════════════════════════════
+  // Al Fakhr: Specialty Items (Mining/Construction/Smithing)
+  // ════════════════════════════════════════════════════════════
   {
-    id: ITEM_IDS.RAW_TROUT,
-    name: 'Raw Trout',
-    description: 'A plump trout from the brook.',
-    category: 'fish',
-    rarity: 'common',
-    value: 4,
-    stackable: true,
-  },
-  // --- Ores ---
-  {
-    id: ITEM_IDS.COPPER_ORE,
-    name: 'Copper Ore',
-    description: 'A chunk of copper ore.',
+    id: ITEM_IDS.SANDSTONE,
+    name: 'Sandstone',
+    description: 'Rough-hewn golden stone from the quarry. The foundation of everything Al Fakhr builds.',
     category: 'ore',
     rarity: 'common',
     value: 2,
     stackable: true,
+    icon: 'diamond-stone',
+    iconLibrary: 'MaterialCommunityIcons',
   },
   {
-    id: ITEM_IDS.IRON_ORE,
-    name: 'Iron Ore',
-    description: 'A heavy piece of iron ore.',
+    id: ITEM_IDS.AL_FAKHR_MARBLE,
+    name: 'Al Fakhr Marble',
+    description: 'Veined white stone shot through with amber. The city\'s pride, literally carved from the earth.',
     category: 'ore',
+    rarity: 'common',
+    value: 5,
+    stackable: true,
+    icon: 'diamond-stone',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.GILDED_ORE,
+    name: 'Gilded Ore',
+    description: 'Dense stone laced with metallic veins that catch the light. Rare, and the quarry crews know it.',
+    category: 'ore',
+    rarity: 'uncommon',
+    value: 12,
+    stackable: true,
+    icon: 'diamond-stone',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.SANDSTONE_BLOCK,
+    name: 'Sandstone Block',
+    description: 'Shaped and squared sandstone, ready for construction. The cutting yard produces hundreds daily.',
+    category: 'building_material',
     rarity: 'common',
     value: 4,
     stackable: true,
+    icon: 'cube-outline',
+    iconLibrary: 'MaterialCommunityIcons',
   },
   {
-    id: ITEM_IDS.SILVER_ORE,
-    name: 'Silver Ore',
-    description: 'A gleaming nugget of silver ore.',
-    category: 'ore',
-    rarity: 'common',
-    value: 7,
+    id: ITEM_IDS.MARBLE_FITTING,
+    name: 'Marble Fitting',
+    description: 'A precision-cut marble piece for decorative construction. The smiths in the Forge Quarter shape these with care.',
+    category: 'building_material',
+    rarity: 'uncommon',
+    value: 10,
     stackable: true,
+    icon: 'cube-outline',
+    iconLibrary: 'MaterialCommunityIcons',
   },
-  // --- Rare drops (El Qabul themed, placeholders) ---
+
+  // ════════════════════════════════════════════════════════════
+  // Al Fakhr: Secondary Items
+  // ════════════════════════════════════════════════════════════
+  {
+    id: ITEM_IDS.DUSTBLOOM,
+    name: 'Dustbloom',
+    description: 'A pale flower that grows where nothing else will. Its petals are slightly gritty.',
+    category: 'herb',
+    rarity: 'common',
+    value: 2,
+    stackable: true,
+    icon: 'flower',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.DESERT_FIG,
+    name: 'Desert Fig',
+    description: 'Sweet and dark, grown in the Lone Garden. The keeper tends each tree individually.',
+    category: 'herb',
+    rarity: 'common',
+    value: 4,
+    stackable: true,
+    icon: 'fruit-cherries',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.WILD_HERB,
+    name: 'Wild Herb',
+    description: 'Aromatic plants growing in the garden undergrowth. Useful in cooking and alchemy.',
+    category: 'herb',
+    rarity: 'common',
+    value: 2,
+    stackable: true,
+    icon: 'leaf',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.SPRING_EEL,
+    name: 'Spring Eel',
+    description: 'A slender eel from the Hidden Spring. Slippery and surprisingly flavorful.',
+    category: 'fish',
+    rarity: 'common',
+    value: 3,
+    stackable: true,
+    icon: 'fish',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.IRONWOOD_LOG,
+    name: 'Ironwood Log',
+    description: 'Dense, dark wood from the old-growth grove. Nearly as hard as the metal it is named for.',
+    category: 'log',
+    rarity: 'common',
+    value: 5,
+    stackable: true,
+    icon: 'tree',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.OLD_SCRAP_METAL,
+    name: 'Old Scrap Metal',
+    description: 'Twisted fragments of pre-collapse metalwork. Rusty but salvageable.',
+    category: 'component',
+    rarity: 'common',
+    value: 3,
+    stackable: true,
+    icon: 'cog',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.DUSTBLOOM_TINCTURE,
+    name: 'Dustbloom Tincture',
+    description: 'A bitter tincture brewed from dustbloom petals. The archivists swear it sharpens the mind.',
+    category: 'potion',
+    rarity: 'common',
+    value: 5,
+    stackable: true,
+    icon: 'flask-round-bottom',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.TRAVELERS_STEW,
+    name: "Traveler's Stew",
+    description: 'A thick, hearty stew made from whatever the road provides. Every batch is different.',
+    category: 'food',
+    rarity: 'common',
+    value: 4,
+    stackable: true,
+    icon: 'food-drumstick',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.ETCHED_RUNE_SHARD,
+    name: 'Etched Rune Shard',
+    description: 'A fragment of stone inscribed with forgotten script. The marks seem to shift when you look away.',
+    category: 'rune',
+    rarity: 'uncommon',
+    value: 8,
+    stackable: true,
+    icon: 'card-text-outline',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.SPRINGMOSS,
+    name: 'Springmoss',
+    description: 'Soft, damp moss from the edge of the Hidden Spring. It holds water for days.',
+    category: 'herb',
+    rarity: 'common',
+    value: 2,
+    stackable: true,
+    icon: 'leaf',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // Al Fakhr: Rare/Story Drops
+  // ════════════════════════════════════════════════════════════
+  {
+    id: ITEM_IDS.BUILDERS_CREST,
+    name: "Builder's Crest",
+    description: 'An ornate medallion bearing the mark of Al Fakhr\'s original architects. A symbol of what they meant to build.',
+    category: 'misc',
+    rarity: 'rare',
+    value: 40,
+    stackable: true,
+    icon: 'shield-star',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.FRAGMENT_OF_AMBITION,
+    name: 'Fragment of Ambition',
+    description: 'A shard of something that was once part of something greater. It hums with unrealized potential.',
+    category: 'misc',
+    rarity: 'rare',
+    value: 50,
+    stackable: true,
+    icon: 'star-four-points',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.FOUNDATION_RELIC,
+    name: 'Foundation Relic',
+    description: 'A piece of the original city foundation. The stone remembers what stood here.',
+    category: 'misc',
+    rarity: 'uncommon',
+    value: 15,
+    stackable: true,
+    icon: 'pillar',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // General Rare Drops (not biome-specific)
+  // ════════════════════════════════════════════════════════════
   {
     id: ITEM_IDS.ASHEN_HEARTWOOD,
     name: 'Ashen Heartwood',
@@ -109,6 +300,8 @@ export const itemDefinitions: ItemDefinition[] = [
     rarity: 'uncommon',
     value: 15,
     stackable: true,
+    icon: 'fire',
+    iconLibrary: 'MaterialCommunityIcons',
   },
   {
     id: ITEM_IDS.DUST_PEARL,
@@ -118,6 +311,8 @@ export const itemDefinitions: ItemDefinition[] = [
     rarity: 'uncommon',
     value: 15,
     stackable: true,
+    icon: 'circle-slice-8',
+    iconLibrary: 'MaterialCommunityIcons',
   },
   {
     id: ITEM_IDS.SCORCHED_RELIC,
@@ -127,6 +322,8 @@ export const itemDefinitions: ItemDefinition[] = [
     rarity: 'rare',
     value: 40,
     stackable: true,
+    icon: 'treasure-chest',
+    iconLibrary: 'MaterialCommunityIcons',
   },
   {
     id: ITEM_IDS.FRACTURED_RUNESTONE,
@@ -136,6 +333,34 @@ export const itemDefinitions: ItemDefinition[] = [
     rarity: 'rare',
     value: 50,
     stackable: true,
+    icon: 'card-text-outline',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+
+  // ════════════════════════════════════════════════════════════
+  // Equipment
+  // ════════════════════════════════════════════════════════════
+  {
+    id: ITEM_IDS.RUSTY_BLADE,
+    name: 'Rusty Blade',
+    description: 'A pitted sword scavenged from the wastes. It still cuts, barely.',
+    category: 'equipment',
+    rarity: 'common',
+    value: 5,
+    stackable: false,
+    icon: 'sword',
+    iconLibrary: 'MaterialCommunityIcons',
+  },
+  {
+    id: ITEM_IDS.BATTERED_SHIELD,
+    name: 'Battered Shield',
+    description: 'Dented and scarred, but it can still absorb a blow or two.',
+    category: 'equipment',
+    rarity: 'common',
+    value: 5,
+    stackable: false,
+    icon: 'shield',
+    iconLibrary: 'MaterialCommunityIcons',
   },
 ];
 

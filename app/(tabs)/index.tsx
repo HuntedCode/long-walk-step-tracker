@@ -2,6 +2,8 @@ import { ScrollView, View, Text, Platform, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePedometer } from '@/src/hooks/usePedometer';
 import { useStepStore } from '@/src/stores/useStepStore';
+import { useInventoryStore } from '@/src/stores/useInventoryStore';
+import { itemDefinitions } from '@/src/data/items';
 import { StepCounter } from '@/src/components/steps/StepCounter';
 import { StepSimulator } from '@/src/components/steps/StepSimulator';
 import { StepBankDisplay } from '@/src/components/game/StepBankDisplay';
@@ -74,6 +76,8 @@ export default function DashboardScreen() {
                 <DebugRow label="Error" value={backfillDebug.error} />
               ) : null}
             </View>
+
+            <InventoryDebug />
           </>
         ) : null}
       </ScrollView>
@@ -86,6 +90,98 @@ function DebugRow({ label, value }: { label: string; value: string }) {
     <View className="flex-row justify-between py-0.5">
       <Text className="text-xs text-neutral-content">{label}</Text>
       <Text className="text-xs text-base-content font-mono">{value}</Text>
+    </View>
+  );
+}
+
+function InventoryDebug() {
+  const items = useInventoryStore((s) => s.items);
+  const addItems = useInventoryStore((s) => s.addItems);
+  const removeItems = useInventoryStore((s) => s.removeItems);
+
+  return (
+    <View className="mx-4 mt-4 mb-6 bg-base-300 rounded-xl p-4">
+      <Text className="text-sm font-semibold text-warning text-center mb-3">
+        Inventory Debug
+      </Text>
+
+      {/* Quick add buttons */}
+      <Text className="text-xs font-semibold text-neutral-content mb-2">
+        Add Items
+      </Text>
+      <View className="flex-row flex-wrap gap-2 mb-3">
+        {itemDefinitions.map((def) => (
+          <Pressable
+            key={def.id}
+            className="px-2 py-1 rounded"
+            style={{ backgroundColor: '#0D1117', borderWidth: 1, borderColor: '#1E2530' }}
+            onPress={() => addItems([{ itemId: def.id, quantity: 1 }])}
+          >
+            <Text className="text-xs" style={{ color: '#ECF9FF' }}>
+              + {def.name}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+
+      {/* Add bulk */}
+      <Pressable
+        className="px-3 py-1.5 rounded-lg mb-3"
+        style={{ backgroundColor: '#28EBFF' }}
+        onPress={() =>
+          addItems(
+            itemDefinitions.map((def) => ({
+              itemId: def.id,
+              quantity: 5,
+            })),
+          )
+        }
+      >
+        <Text className="text-xs font-semibold text-center" style={{ color: '#0D1117' }}>
+          Add 5 of everything
+        </Text>
+      </Pressable>
+
+      {/* Current inventory with remove buttons */}
+      <Text className="text-xs font-semibold text-neutral-content mb-2">
+        Current Inventory
+      </Text>
+      {Object.keys(items).length === 0 ? (
+        <Text className="text-xs" style={{ color: '#5A6A7A' }}>
+          Empty
+        </Text>
+      ) : (
+        Object.entries(items).map(([itemId, qty]) => {
+          const def = itemDefinitions.find((d) => d.id === itemId);
+          return (
+            <View key={itemId} className="flex-row justify-between items-center py-1">
+              <Text className="text-xs text-base-content">
+                {def?.name ?? itemId} x{qty}
+              </Text>
+              <View className="flex-row gap-2">
+                <Pressable
+                  className="px-2 py-0.5 rounded"
+                  style={{ backgroundColor: '#FF5B71' }}
+                  onPress={() => removeItems(itemId, 1)}
+                >
+                  <Text className="text-xs font-semibold" style={{ color: '#0D1117' }}>
+                    -1
+                  </Text>
+                </Pressable>
+                <Pressable
+                  className="px-2 py-0.5 rounded"
+                  style={{ backgroundColor: '#FF5B71' }}
+                  onPress={() => removeItems(itemId, qty)}
+                >
+                  <Text className="text-xs font-semibold" style={{ color: '#0D1117' }}>
+                    All
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          );
+        })
+      )}
     </View>
   );
 }

@@ -84,6 +84,25 @@ export const usePlayerStore = create<PlayerStore>()(
     {
       name: 'longwalk-player',
       storage: zustandStorage,
+      version: 1,
+      migrate: (persisted, version) => {
+        const state = persisted as PlayerStoreState;
+        if (version < 1) {
+          // v0 -> v1: placeholder zones were removed. Reset to new starting zone.
+          const removedZones = new Set([
+            'homestead',
+            'whispering_woods',
+            'silver_brook',
+            'ironpeak_ridge',
+          ]);
+          if (removedZones.has(state.currentZoneId)) {
+            state.currentZoneId = STARTING_ZONE;
+            state.activityProgress = null;
+            state.travel = null;
+          }
+        }
+        return state;
+      },
     },
   ),
 );

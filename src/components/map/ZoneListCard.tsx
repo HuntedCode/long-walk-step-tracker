@@ -94,7 +94,7 @@ export function ZoneListCard({
               </View>
             )}
             <Text className="text-xs font-semibold" style={{ color: biomeColor }}>
-              {zone.biome}
+              {zone.terrain}
             </Text>
           </View>
         </View>

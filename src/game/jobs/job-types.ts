@@ -10,6 +10,9 @@ export type ItemId = string;
 /** Unique identifier for a zone (e.g., 'whispering_woods'). */
 export type ZoneId = string;
 
+/** Re-export BiomeId so consumers can import from this central type file. */
+export type { BiomeId } from '../biomes/biome-types';
+
 /** Static definition of a job. Lives in src/data/jobs.ts. */
 export interface JobDefinition {
   id: JobId;
@@ -63,6 +66,10 @@ export interface ItemDefinition {
   value: number;
   /** Whether this item stacks in inventory. Materials stack; equipment won't. */
   stackable: boolean;
+  /** Icon name (from Ionicons or MaterialCommunityIcons). */
+  icon: string;
+  /** Which icon library the icon belongs to. */
+  iconLibrary: 'Ionicons' | 'MaterialCommunityIcons';
 }
 
 /** An item reward granted on activity completion. */

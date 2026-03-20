@@ -1,7 +1,10 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
+import { Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function TabLayout() {
+  const router = useRouter();
+
   return (
     <Tabs
       screenOptions={{
@@ -24,6 +27,14 @@ export default function TabLayout() {
           title: 'Dashboard',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="compass-outline" size={size} color={color} />
+          ),
+          headerRight: () => (
+            <Pressable
+              onPress={() => router.push('/settings')}
+              style={{ marginRight: 16 }}
+            >
+              <Ionicons name="settings-outline" size={22} color="#ECF9FF" />
+            </Pressable>
           ),
         }}
       />
@@ -55,11 +66,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="inventory"
         options={{
-          title: 'Profile',
+          title: 'Inventory',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
+            <Ionicons name="bag-outline" size={size} color={color} />
           ),
         }}
       />

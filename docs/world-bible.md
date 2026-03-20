@@ -304,55 +304,82 @@ cracks show.
 The city works because it doesn't resolve this tension. Pride is not a villain.
 Pride is complex. The player witnesses both sides and forms their own judgment.
 
-### 5.3 Surrounding Zones
+### 5.3 Zones (18 zones, 6 clusters)
 
-4–8 zones around Al Fakhr. Each serves a gameplay function (grinding, resources,
-exploration) while subtly connecting to the theme:
+Al Fakhr specializes in **Mining, Construction, and Smithing** (deep, multi-tier
+content). Secondary skills (Foraging, Woodcutting, Cooking, Fishing) have lighter
+coverage. Activities span levels 1-25.
 
-**Seed concepts** (not final names or designs):
-- A quarry where builders compete over output — pride as fuel and motivation
-- A garden tended by one person who refuses all help — pride as isolation
-- Ruins of something far too ambitious that was never finished — pride as downfall
-- A workshop where an artisan teaches their craft to anyone willing — pride as
-  generosity and legacy
+#### The City (central hub)
+| Zone | Thematic role |
+|------|--------------|
+| **The Promenade** (central zone) | Main street, markets, gathering places. Ambitious grandeur. |
+| The Forge Quarter | Industrial heart. Furnaces, smiths, relentless heat. |
+| The High Archive | Library atop old ruins. Knowledge preserved and hoarded. |
+| The Builder's Terrace | Scaffolding and cranes. Always building higher, always reaching. |
 
-**[OPEN]**: Specific zone names, detailed descriptions, activities, items, and
-connection data. These will be defined when this biome is implemented in
-`src/data/zones.ts` and `src/data/activities.ts`.
+#### Quarry Highlands
+| Zone | Thematic role |
+|------|--------------|
+| The Quarry Face | Open pit mine. Crews compete over output. Pride as fuel. |
+| Amber Ridge (totalLevel 10) | High ground, wind-scoured, rich veins in the rock. |
+| The Cutting Yard | Where raw stone becomes shaped blocks. Chisels never stop. |
 
-### 5.4 Connection Questline
+#### The Greenwood
+| Zone | Thematic role |
+|------|--------------|
+| The Lone Garden | Overgrown garden tended by one person who refuses help. Pride as isolation. |
+| The Hidden Spring | Quiet pool in the garden depths. Few know it exists. |
+| Ironwood Grove | Old-growth forest. Trees predate the collapse, wood hard as metal. |
+
+#### The Ruins
+| Zone | Thematic role |
+|------|--------------|
+| The Old Foundation | Where the original city stood. Memories are heavy here. |
+| The Unfinished Reach | Half-built monument no one can agree on. Pride as downfall. |
+| The Collapsed Gallery (totalLevel 12) | Buried chambers, machinery humming faintly. |
+
+#### Outskirts
+| Zone | Thematic role |
+|------|--------------|
+| Dustfall Edge | Border between known and unknown. Entry point from The Cairn. |
+| Pilgrim's Rest | Waystation for travelers. Simple fires, shared stories. |
+
+#### Story Zones (NPC-associated)
+| Zone | Thematic role |
+|------|--------------|
+| Karam's Scaffold (totalLevel 15) | The Builder's personal tower. No one else may touch it. |
+| The Rival's Camp | Competing settlement. Two visions, neither willing to bend. |
+| The Newcomer's Workshop | Open-air workshop near the Greenwood. No one turned away. |
+
+### 5.4 Connection Questline: "The Weight of Ambition"
 
 The connection quest for Al Fakhr involves mediating between factions whose pride
-prevents cooperation. The player does not defeat anyone. They witness enough
-stories to understand why the pride exists — where it came from, what it protects,
-what it costs.
+prevents cooperation. All four NPCs (Karam, Safiya, Reza, Tariq) are involved.
+The player does not defeat anyone. They witness enough stories to understand why
+the pride exists, where it came from, what it protects, what it costs.
 
-The questline concludes with the connection being made — Al Fakhr joined to the
+The questline concludes with the connection being made, Al Fakhr joined to the
 network, its people able to reach (and be reached by) the wider world. The game
 does not tell the player whether this is a triumph or a compromise. It's both.
 
-**[OPEN]**: Specific quest steps, NPC names, dialogue, and mechanical
-requirements. This depends on the Phase 2 quest system.
+**[OPEN]**: Specific quest steps, dialogue, and mechanical requirements. Depends
+on the Phase 2 quest system.
 
-### 5.5 NPCs — Seed Concepts
+### 5.5 NPCs
 
-These are archetypes, not finished characters. Each represents one facet of pride:
+Four named NPCs, each representing one facet of pride. Each is assigned to a
+story zone in `src/data/biomes.ts`.
 
-- **The Builder**: Rebuilt more of the city than anyone. Genuinely skilled,
-  genuinely dedicated. But can't delegate, can't rest, can't admit when a design
-  doesn't work. Pride as drive that becomes self-destruction.
-- **The Elder**: Remembers the old world and measures everything against it.
-  Nothing is ever good enough because nothing is what it was. Pride as grief
-  disguised as standards.
-- **The Newcomer**: Arrived after the collapse, has no memory of "before." Builds
-  without the weight of comparison. Represents pride that isn't tethered to loss —
-  but is dismissed by those who were there.
-- **The Rival**: Runs a competing project to the Builder. Their conflict isn't
-  personal — it's two visions of what the city should become, neither willing to
-  bend. Pride as principle that becomes stubbornness.
+| Name | Archetype | Zone | Facet of pride |
+|------|-----------|------|---------------|
+| **Karam** | The Builder | Karam's Scaffold | Rebuilt more of the city than anyone. Skilled, dedicated, incapable of rest or delegation. Pride as drive that becomes self-destruction. |
+| **Safiya** | The Elder | The Old Foundation | Remembers the old world. Measures everything against what was lost. Her standards are grief in disguise. |
+| **Reza** | The Newcomer | The Newcomer's Workshop | Arrived after the collapse. Builds without the weight of comparison, but is dismissed by those who were there. |
+| **Tariq** | The Rival | The Rival's Camp | Runs a competing project to Karam. Two visions of what the city should become, neither willing to bend. |
 
-**[OPEN]**: Full NPC designs, dialogue, character arcs, and how they interweave
-with the connection questline.
+**[OPEN]**: Full dialogue, character arcs, and how they interweave with the
+connection questline. Depends on Phase 2 quest system.
 
 ---
 
@@ -469,10 +496,8 @@ Each narrative biome maps to a cluster of `ZoneDefinition` entries in
 | `connections` | Physical geography — travel distances between zones |
 | `unlockRequirement` | Progression gate (total level required to enter) |
 
-The current placeholder zones (Homestead, Whispering Woods, Silver Brook,
-Ironpeak Ridge) will be re-contextualized or replaced as narrative biomes are
-implemented. Homestead may become the starting settlement where the player
-begins their walk.
+The hub biome (The Cairn) serves as the starting settlement. Al Fakhr is
+the first narrative biome with full zone, activity, and item content.
 
 ### 7.2 Activity & Item Flavor
 
@@ -728,7 +753,7 @@ indefinitely.
 | How much time has passed since the collapse | Affects NPC ages, memory of "before," reconstruction progress |
 | The player character's specific loss | May be better left permanently undefined |
 | Voice narration production pipeline | Recording, editing, format, integration — see Section 7.6 |
-| How placeholder zones transition to narrative biomes | Homestead likely becomes starting settlement; others TBD |
+| Biome specialty balance across the full roster | Each biome needs 2-3 deep skills; the full set should cover all 22 skills |
 | Biome ordering and emotional arc of the full journey | Which emotions come early vs. late matters thematically |
 | Combat formula specifics | Accuracy, max hit, damage reduction equations. To be defined during Phase 3 implementation |
 | Auto-eat threshold design | Fixed percentage (e.g., 50% HP) or tiered upgrade system (like Melvor Idle)? |

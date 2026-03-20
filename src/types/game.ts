@@ -1,6 +1,7 @@
 import type {
   ActivityId,
   ActivityProgressState,
+  BiomeId,
   ItemId,
   ItemReward,
   JobState,
@@ -38,7 +39,9 @@ export type GameEvent =
   | { type: 'LEVEL_UP'; jobId: string; oldLevel: number; newLevel: number }
   | { type: 'BANK_DEPOSIT'; amount: number }
   | { type: 'BANK_WITHDRAWAL'; amount: number }
-  | { type: 'RARE_DROP'; itemId: ItemId; quantity: number; rarity: ItemRarity };
+  | { type: 'RARE_DROP'; itemId: ItemId; quantity: number; rarity: ItemRarity }
+  | { type: 'BIOME_DISCOVERED'; biomeId: BiomeId }
+  | { type: 'BIOME_ENTERED'; biomeId: BiomeId };
 
 /** Output of processing a game tick. Applied to stores by the hook. */
 export interface GameTickResult {
