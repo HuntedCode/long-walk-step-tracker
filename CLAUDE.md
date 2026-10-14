@@ -1,22 +1,24 @@
-# CLAUDE.md — LongWalk Project Guide
+# LongWalk — Project CLAUDE.md
+
+> This file contains project-specific standards. See `~/.claude/CLAUDE.md` for universal collaboration, workflow, and quality standards that apply across all projects.
 
 ## Project Overview
 
 **LongWalk** (working title: "The Long Walk To X") is a step-counting RPG mobile app
 that gamifies daily walking with RuneScape-inspired mechanics. Steps fuel RPG
-progression — leveling stats, training jobs, completing quests, and engaging in combat.
+progression: leveling stats, training jobs, completing quests, and engaging in combat.
 
 - **Target platforms**: Android and iOS (personal use first, eventual release)
 - **Art direction**: Text/UI-heavy with procedural/geometric visuals. The visual layer
-  is swappable — art can be upgraded later without rewriting game logic.
+  is swappable: art can be upgraded later without rewriting game logic.
 - **Development philosophy**: Lean from day one. DRY code, modular game systems,
   data-driven content, regular code audits, feature branches, conventional commits.
 
 ### Development Phases
 
-1. **MVP**: Skill system (22 jobs) — steps fuel job XP, activities produce items
-2. **Phase 2**: Quest system — step goals unlock quests and story progression
-3. **Phase 3**: Combat & loot system — steps generate encounters and rewards
+1. **MVP**: Skill system (22 jobs): steps fuel job XP, activities produce items
+2. **Phase 2**: Quest system: step goals unlock quests and story progression
+3. **Phase 3**: Combat and loot system: steps generate encounters and rewards
 
 ---
 
@@ -32,7 +34,7 @@ progression — leveling stats, training jobs, completing quests, and engaging i
 | Wayfaring (4) | Wayfinding, Hunting, Divination, Connection |
 
 Steps fuel job activities. Activities grant XP for their parent job.
-New jobs can be added by editing `src/data/jobs.ts` — no engine changes required.
+New jobs can be added by editing `src/data/jobs.ts`, no engine changes required.
 
 ---
 
@@ -68,12 +70,12 @@ New jobs can be added by editing `src/data/jobs.ts` — no engine changes requir
 
 ```
 LongWalk/
-├── app/                          # Expo Router — file-based routing
+├── app/                          # Expo Router, file-based routing
 │   ├── _layout.tsx               # Root layout (providers, global setup)
 │   ├── index.tsx                 # Entry redirect or splash
 │   ├── (tabs)/                   # Tab navigator group
 │   │   ├── _layout.tsx           # Tab bar configuration
-│   │   ├── dashboard.tsx         # Main screen — steps, XP, quick stats
+│   │   ├── dashboard.tsx         # Main screen: steps, XP, quick stats
 │   │   ├── skills.tsx            # Skills view (22 jobs grouped by category)
 │   │   ├── journal.tsx           # Activity log / quest log (Phase 2)
 │   │   └── profile.tsx           # Player profile and settings
@@ -90,7 +92,7 @@ LongWalk/
 │   │   ├── steps/                # Step tracking components
 │   │   └── layout/               # Layout wrappers
 │   │
-│   ├── game/                     # CORE GAME ENGINE — pure TS, no React
+│   ├── game/                     # CORE GAME ENGINE, pure TS, no React
 │   │   ├── jobs/                 # Job/skill system engine
 │   │   │   ├── job-engine.ts     # Job progression logic
 │   │   │   └── job-types.ts      # Job interfaces
@@ -160,16 +162,10 @@ LongWalk/
 
 ## Coding Conventions
 
-### Writing Style
-
-- **Never use em dashes** (the long dash: `—`). Use commas, periods, colons, or
-  parentheses instead. This applies to all text: code comments, descriptions,
-  flavor text, documentation, and commit messages.
-
 ### TypeScript
 
 - Strict mode enabled (`"strict": true`)
-- No `any` types — use `unknown` and type narrowing
+- No `any` types: use `unknown` and type narrowing
 - Prefer `interface` for object shapes, `type` for unions and computed types
 - Export types explicitly: `export interface Stat { ... }`
 - Use `as const` for static data to get literal types
@@ -194,7 +190,7 @@ LongWalk/
 - Named exports for all components except route screens
 - Route screens use default exports (Expo Router requirement)
 - Props interface named `{ComponentName}Props`, defined above the component
-- Route screens in `app/` are thin — they compose components, not logic
+- Route screens in `app/` are thin: they compose components, not logic
 
 ```typescript
 interface SkillCardProps {
@@ -225,10 +221,10 @@ Each game system gets its own store. Stores are independent but can read from ea
 other via `getState()`.
 
 ```
-usePlayerStore  — Player identity, total lifetime stats
-useStepStore    — Pedometer session, daily step counts, history
-useJobStore     — Job/skill progress and levels (22 skills)
-useQuestStore   — Quest status (Phase 2)
+usePlayerStore    — Player identity, total lifetime stats
+useStepStore      — Pedometer session, daily step counts, history
+useJobStore       — Job/skill progress and levels (22 skills)
+useQuestStore     — Quest status (Phase 2)
 useInventoryStore — Items, equipment (Phase 3)
 ```
 
@@ -271,131 +267,23 @@ Device Pedometer
 
 ---
 
-## Development Workflow & Code Auditing
+## Git Commit Scopes
 
-### Code Audit Checklist (Every Feature Branch)
+Scopes for this project: `jobs`, `steps`, `quests`, `combat`, `ui`, `nav`, `store`, `config`
 
-Before any feature branch is considered complete, verify:
+---
 
-1. **Bug & Logic Errors**: Review all new/modified functions for off-by-one errors,
-   edge cases, null/undefined handling, and incorrect assumptions
-2. **Inefficiencies**: Check for unnecessary re-renders, redundant computations,
-   O(n^2) where O(n) is possible, and memory leaks in hooks/subscriptions
-3. **Bad Practices**: No `any` types, magic numbers, hardcoded strings, or side
-   effects in pure functions
-4. **DRY Violations**: If similar code exists in 2+ places, extract to a shared
-   utility, hook, or engine function
-5. **Code Reuse**: Before writing new code, search the codebase for existing
-   utilities and patterns that already solve the problem
-6. **Scope Creep**: Branch contains only changes related to its feature. No
-   "while I'm here" fixes — those get their own branches
-7. **Utils/Code Duplication**: Audit `src/utils/`, `src/hooks/`, and `src/game/core/`
-   for overlapping functions. One function, one purpose, one location
-8. **Dead Code**: No unused imports, variables, functions, or files. No
-   commented-out code in commits
-9. **Documentation Current**: If any system documented in `docs/` was modified,
-   update the relevant doc in the same branch
-
-### Lean Development Principles
-
-- **YAGNI**: Don't build features, abstractions, or infrastructure "for later."
-  Build what's needed now
-- **Single Responsibility**: Every file, function, and component does one thing.
-  If a function name has "and" in it, split it
-- **Minimal Abstraction**: Three similar lines of code is fine. Only abstract when
-  there are 3+ concrete use cases
-- **No Speculative Generalization**: No preemptive config options, feature flags,
-  or extension points until there's a real need
-- **Prefer Deletion Over Deprecation**: Unused code gets deleted, not wrapped or
-  re-exported
-
-### Workflow Enforcement
-
-- Every feature branch includes audit notes confirming the checklist was followed
-- First step of any feature: search existing code for reusable pieces
-- Audit issues get fixed in the same branch if directly related, or in a separate
-  `fix/` or `refactor/` branch
-
-### Inline Audit Requirement
-
-**Before completing any feature or set of changes**, run a comprehensive audit of all
-new and modified files against the Code Audit Checklist above. This is mandatory — do
-not skip it, even for "simple" changes.
-
-The audit must:
-1. Read every new/modified file
-2. Check each item on the checklist (bugs, inefficiencies, bad practices, DRY, reuse,
-   scope creep, dead code)
-3. Report findings by severity (critical, warning, minor)
-4. Fix all critical and warning issues before the work is considered complete
-5. Document any minor issues that are intentionally deferred (with rationale)
-
-This catches issues while context is fresh and prevents technical debt from accumulating.
-
-### Documentation Maintenance
+## Documentation
 
 The `docs/` folder contains system documentation that must stay current.
-**When a system's behavior changes, its documentation must be updated in the
-same branch.** Stale docs are worse than no docs.
 
 | Document | Scope |
 |----------|-------|
 | `docs/world-bible.md` | Narrative design, world-building, themes, biome structure |
 | `docs/step-pipeline.md` | Step flow from sensor to game state (pedometer, game tick, bank) |
-| `docs/game-systems.md` | Jobs, activities, zones, travel, inventory, events — how they interconnect |
+| `docs/game-systems.md` | Jobs, activities, zones, travel, inventory, events, how they interconnect |
 | `docs/store-architecture.md` | Zustand stores, persistence, cross-store patterns |
 | `docs/step-stats-and-goals.md` | Streaks, daily goals, step statistics |
-
-**Rules:**
-- If you modify a system's behavior, update the relevant doc in the same branch
-- When creating a new system, evaluate whether it needs documentation (bar: is
-  the behavior non-obvious from reading the code?)
-- Docs focus on *why things work this way* and *how systems connect* — not
-  implementation details obvious from reading the source
-- Keep docs scannable: tables, diagrams, and short sections over prose walls
-
----
-
-## Git Workflow
-
-### Branch Strategy
-
-- `main` — stable, working code only
-- `develop` — integration branch for features
-- Feature branches: `feature/<system>/<description>`
-- Bug fix branches: `fix/<description>`
-- Refactor branches: `refactor/<description>`
-
-### Branch Naming Examples
-
-```
-feature/jobs/xp-calculation
-feature/jobs/level-up-screen
-feature/steps/pedometer-integration
-feature/jobs/mining-system
-feature/ui/dashboard-layout
-fix/step-count-reset-on-midnight
-refactor/extract-shared-progress-bar
-```
-
-### Commit Messages (Conventional Commits)
-
-```
-<type>(<scope>): <short description>
-
-Types: feat, fix, refactor, style, test, docs, chore
-Scopes: jobs, steps, quests, combat, ui, nav, store, config
-```
-
-Examples:
-```
-feat(jobs): add XP calculation engine with RS-style exponential curve
-feat(steps): integrate expo-sensors Pedometer subscription
-fix(store): persist job state across app restarts
-refactor(ui): extract ProgressBar into reusable component
-test(jobs): add unit tests for level-up threshold calculation
-chore(config): configure NativeWind and Tailwind theme
-```
 
 ---
 
@@ -440,7 +328,7 @@ component file → Pure UI (renders hook data, dispatches store actions)
 
 ## Art / Asset Pipeline
 
-### MVP: Procedural & Text-Based
+### MVP: Procedural and Text-Based
 
 - Icons: geometric shapes via `react-native-svg` or Unicode placeholders
 - Progress: animated rings, bars, number counters via Reanimated
@@ -452,7 +340,7 @@ component file → Pure UI (renders hook data, dispatches store actions)
 
 The visual layer is decoupled from game logic:
 - Engine outputs events (`{ type: 'LEVEL_UP', stat: 'power', newLevel: 15 }`)
-- Components render events — swap the component, change the visuals
+- Components render events: swap the component, change the visuals
 - Asset references use string keys (`icon: 'power'`), resolved by a mapper function
 - Pixel art, AI-generated assets, or 3D models can be added later by updating
   the resolver. No game logic changes required.
